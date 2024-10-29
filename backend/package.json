@@ -4,6 +4,7 @@
   "description": "The backend project for Snyder, based on Node.js.",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install"
   },
@@ -25,5 +26,8 @@
       "eslint --fix",
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "express": "^4.21.1"
   }
 }
