@@ -1,9 +1,19 @@
 // spotifyRoutes.js
 const express = require('express');
-const request = require('request'); // Consider using axios or node-fetch for better promise support
+const axios = require('axios');
+const rateLimit = require('express-rate-limit');
 const { ensureAuthenticated, refreshSpotifyToken } = require('./auth'); // Adjust the path if necessary
 
 const router = express.Router();
+
+// Rate limiter middleware (e.g., max 100 requests per 15 minutes per IP)
+const spotifyDataLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: {
+    error: 'Too many requests, please try again later.',
+  },
+});
 
 // Utility function to check token expiration
 function isTokenExpired(expiresIn) {
@@ -11,44 +21,45 @@ function isTokenExpired(expiresIn) {
 }
 
 // Function to fetch user data from Spotify
-const axios = require('axios');
-
-function getSpotifyData(accessToken, res) {
+async function getSpotifyData(accessToken) {
   const options = {
     method: 'get',
     url: 'https://api.spotify.com/v1/me',
     headers: { Authorization: 'Bearer ' + accessToken },
   };
 
-  axios(options)
-    .then((response) => {
-      res.json(response.data);
-    })
-    .catch((error) => {
-      res.status(error.response.status).json({ error: error.response.data });
-    });
+  const response = await axios(options);
+  return response.data;
 }
 
 // Route to fetch Spotify data
-router.get('/api/spotify-data', ensureAuthenticated, (req, res) => {
-  // Check if token has expired
-  if (isTokenExpired(req.user.expiresIn)) {
-    // Refresh the access token
-    refreshSpotifyToken(req.user.refreshToken, (err, newAccessToken, newExpiresIn) => {
-      if (err) {
-        return res.status(500).json({ error: 'Could not refresh access token' });
+router.get(
+  '/api/spotify-data',
+  ensureAuthenticated,
+  spotifyDataLimiter, // Apply rate limiting to this route
+  async (req, res) => {
+    try {
+      // Check if token has expired
+      if (isTokenExpired(req.user.expiresIn)) {
+        // Refresh the access token
+        const { newAccessToken, newExpiresIn } = await refreshSpotifyToken(
+          req.user.refreshToken
+        );
+
+        // Update the user's access token and expiration time
+        req.user.accessToken = newAccessToken;
+        req.user.expiresIn = newExpiresIn;
+        req.session.passport.user = req.user; // Update the session
       }
-      // Update the user's access token and expiration time
-      req.user.accessToken = newAccessToken;
-      req.user.expiresIn = newExpiresIn;
-      req.session.passport.user = req.user; // Update the session
-      // Proceed to make the API call
-      getSpotifyData(req.user.accessToken, res);
-    });
-  } else {
-    // Token is valid, proceed to make the API call
-    getSpotifyData(req.user.accessToken, res);
+
+      // Token is valid, proceed to make the API call
+      const spotifyData = await getSpotifyData(req.user.accessToken);
+      res.json(spotifyData);
+    } catch (error) {
+      console.error('Error fetching Spotify data:', error);
+      res.status(500).json({ error: 'Failed to fetch Spotify data' });
+    }
   }
-});
+);
 
 module.exports = router;

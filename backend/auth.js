@@ -2,7 +2,7 @@
 const express = require('express');
 const passport = require('passport');
 const SpotifyStrategy = require('passport-spotify').Strategy;
-const request = require('request'); // Consider using a modern HTTP client like axios or node-fetch
+const axios = require('axios'); // Use axios for HTTP requests
 
 const router = express.Router();
 
@@ -72,9 +72,7 @@ function ensureAuthenticated(req, res, next) {
 }
 
 // Function to refresh the Spotify access token
-const axios = require('axios');
-
-function refreshSpotifyToken(refreshToken, callback) {
+async function refreshSpotifyToken(refreshToken) {
   const authOptions = {
     method: 'post',
     url: 'https://accounts.spotify.com/api/token',
@@ -92,16 +90,15 @@ function refreshSpotifyToken(refreshToken, callback) {
     },
   };
 
-  axios(authOptions)
-    .then((response) => {
-      const newAccessToken = response.data.access_token;
-      const newExpiresIn = Date.now() + response.data.expires_in * 1000;
-      callback(null, newAccessToken, newExpiresIn);
-    })
-    .catch((error) => {
-      console.error('Failed to refresh access token:', error.response.data);
-      callback(error, null, null);
-    });
+  try {
+    const response = await axios(authOptions);
+    const newAccessToken = response.data.access_token;
+    const newExpiresIn = Date.now() + response.data.expires_in * 1000;
+    return { newAccessToken, newExpiresIn };
+  } catch (error) {
+    console.error('Failed to refresh access token:', error.response.data);
+    throw error;
+  }
 }
 
 // Export both the router and utility functions
