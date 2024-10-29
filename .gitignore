@@ -126,7 +126,7 @@ build/
 dist/
 
 # Production
-.env.production
+#.env.production
 
 # Misc
 .DS_Store
