@@ -1,3 +1,7 @@
+# ------------------------------
+# Node.js
+# ------------------------------
+
 # Logs
 logs
 *.log
@@ -74,6 +78,7 @@ web_modules/
 
 # dotenv environment variable files
 .env
+.env.local
 .env.development.local
 .env.test.local
 .env.production.local
@@ -84,12 +89,12 @@ web_modules/
 .parcel-cache
 
 # Next.js build output
-.next
-out
+.next/
+out/
 
 # Nuxt.js build / generate output
-.nuxt
-dist
+.nuxt/
+dist/
 
 # Gatsby files
 .cache/
@@ -97,15 +102,8 @@ dist
 # https://nextjs.org/blog/next-9-1#public-directory-support
 # public
 
-# vuepress build output
+# Vuepress build output
 .vuepress/dist
-
-# vuepress v2.x temp and cache directory
-.temp
-.cache
-
-# Docusaurus cache and generated files
-.docusaurus
 
 # Serverless directories
 .serverless/
@@ -119,12 +117,92 @@ dist
 # TernJS port file
 .tern-port
 
-# Stores VSCode versions used for testing VSCode extensions
-.vscode-test
+# ------------------------------
+# React
+# ------------------------------
 
-# yarn v2
-.yarn/cache
-.yarn/unplugged
-.yarn/build-state.yml
-.yarn/install-state.gz
-.pnp.*
+# Build output
+build/
+dist/
+
+# Production
+.env.production
+
+# Misc
+.DS_Store
+Thumbs.db
+
+# ------------------------------
+# Editor and IDEs
+# ------------------------------
+
+# VS Code
+.vscode/
+.history/
+
+# IntelliJ
+.idea/
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Atom
+.atom/
+
+# WebStorm
+/.idea/
+
+# Emacs
+*~
+
+# Vim
+*.swp
+*.swo
+
+# ------------------------------
+# OS Specific
+# ------------------------------
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# ------------------------------
+# Other
+# ------------------------------
+
+# Temporary files
+tmp/
+temp/
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ------------------------------
+# Optional: Ignore frontend specific files
+# ------------------------------
+
+# React build
+frontend/build/
+frontend/node_modules/
+
+# Backend build
+backend/build/
+backend/node_modules/
+
+# ------------------------------
+# Optional: Ignore testing files
+# ------------------------------
+
+# Jest coverage
+coverage/
