@@ -28,7 +28,7 @@ Snyder is a progressive web application (PWA) that allows users to search for an
 
 ### **Other Technologies**
 
-- **MongoDB (optional)** for storing user preferences (e.g., playlists, favorites).
+- **MongoDB** for storing user preferences (e.g., playlists, favorites) and user-specific access and refresh tokens for Spotify.
 - **Heroku** and **Netlify** for deployment of backend and frontend, respectively.
 - **JWT and Express-Session** for secure user session management.
 - **GitHub Actions** for continuous integration and automated testing.
