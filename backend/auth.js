@@ -52,7 +52,7 @@ router.get(
   passport.authenticate('spotify', { failureRedirect: '/login' }),
   (req, res) => {
     // Successful authentication
-    res.redirect('/dashboard');
+    res.redirect('/');
   }
 );
 
