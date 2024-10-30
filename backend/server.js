@@ -3,10 +3,9 @@ require('dotenv').config();
 
 const express = require('express');
 const session = require('express-session');
-const passport = require('passport');
-const { router: authRoutes } = require('./auth'); // Adjust the path if necessary
-const spotifyRoutes = require('./spotifyRoutes'); // Adjust the path if necessary
 const rateLimit = require('express-rate-limit');
+const spotifyRoutes = require('./spotifyRoutes'); // Spotify routes using Client Credentials Flow
+const { router: authRoutes, ensureAuthenticated } = require('./auth'); // OAuth routes for future use
 
 const app = express();
 
@@ -36,11 +35,12 @@ app.use(
   })
 );
 
-// Initialize Passport
+// Initialize Passport for OAuth (for future use)
+const passport = require('passport');
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Use authentication routes
+// Use authentication routes (if needed)
 app.use(authRoutes);
 
 // Use Spotify data routes
@@ -50,6 +50,27 @@ app.use(spotifyRoutes);
 app.get('/', (req, res) => {
   res.send('Welcome to the Snyder App Backend');
 });
+
+// For testing purposes only
+if (process.env.NODE_ENV === 'development') {
+  // The /config route to display environment variables
+  app.get('/config', (req, res) => {
+    res.json({
+      port: process.env.PORT,
+      spotifyClientId: process.env.SPOTIFY_OAUTH_CLIENT_ID,
+      youtubeApiKeys: process.env.YOUTUBE_API_KEYS
+      // Do NOT include sensitive variables like SPOTIFY_CLIENT_SECRET or SESSION_SECRET
+    });
+  });
+
+  // Protected route - only accessible if the user is logged in
+  app.get('/dashboard', ensureAuthenticated, (req, res) => {
+    res.json({
+      message: 'Welcome to your dashboard',
+      user: req.user, // Access the logged-in user's info here
+    });
+  });
+}
 
 // Start the server
 const PORT = process.env.PORT || 3000;
