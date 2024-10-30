@@ -8,7 +8,11 @@ const router = express.Router();
 
 // Mount routes
 router.use('/api/spotify', spotifyRoutes);
-router.use('/auth', authRoutes);
+
+// Mount auth routes only if enabled in the environment config
+if (require('../config/config').spotify.enableAuthRoutes) {
+  router.use('/auth', authRoutes);
+}
 
 // Mount testRoutes only in development
 if (process.env.NODE_ENV === 'development') {

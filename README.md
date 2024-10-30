@@ -132,9 +132,11 @@ snyder/
 │   │   ├── index.js
 │   │   ├── spotifyRoutes.js
 │   │   └── authRoutes.js
+│   │   └── testRoutes.js
 │   ├── controllers/
 │   │   ├── spotifyController.js
 │   │   └── authController.js
+│   │   └── testController.js
 │   ├── services/
 │   │   ├── spotifyService.js
 │   │   ├── spotifyClientCredentials.js

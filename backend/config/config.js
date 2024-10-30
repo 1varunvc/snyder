@@ -11,6 +11,7 @@ module.exports = {
     redirectUri: process.env.SPOTIFY_REDIRECT_URI,
     oauthClientId: process.env.SPOTIFY_OAUTH_CLIENT_ID,
     oauthClientSecret: process.env.SPOTIFY_OAUTH_CLIENT_SECRET,
+    enableAuthRoutes: process.env.ENABLE_AUTH_ROUTES === 'true',
   },
   youtubeApiKeys: process.env.YOUTUBE_API_KEYS.split(','),
   mongoUri: process.env.MONGODB_URI,
