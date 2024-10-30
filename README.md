@@ -121,35 +121,43 @@ Snyder is a progressive web application (PWA) that allows users to search for an
 
 ```
 snyder/
-│
 ├── backend/
-│   ├── .env.example
+│   ├── .env
+│   ├── .env.development
+│   ├── .env.production
 │   ├── package.json
 │   ├── server.js
 │   ├── config/
 │   │   └── config.js
-│   ├── routes/
+│   ├── auth/
+│   │   ├── index.js
+│   │   ├── authRoutes.js
+│   │   ├── authController.js
+│   │   ├── authService.js
+│   │   ├── authMiddleware.js
+│   │   └── README.md
+│   ├── spotify/
 │   │   ├── index.js
 │   │   ├── spotifyRoutes.js
-│   │   └── authRoutes.js
-│   │   └── testRoutes.js
-│   ├── controllers/
 │   │   ├── spotifyController.js
-│   │   └── authController.js
-│   │   └── testController.js
-│   ├── services/
 │   │   ├── spotifyService.js
 │   │   ├── spotifyClientCredentials.js
-│   │   └── authService.js
-│   ├── middleware/
-│   │   ├── rateLimiter.js
-│   │   ├── authMiddleware.js
-│   │   └── errorHandler.js
+│   │   └── README.md
+│   ├── test/
+│   │   ├── index.js
+│   │   ├── testRoutes.js
+│   │   ├── testController.js
+│   │   └── README.md
 │   ├── models/
-│   │   └── user.js (optional, for future use)
-│   └── utils/
-│       └── logger.js
-│
+│   │   ├── user.js
+│   │   └── README.md
+│   ├── utils/
+│   │   ├── index.js
+│   │   ├── rateLimiter.js
+│   │   ├── errorHandler.js
+│   │   ├── logger.js
+│   │   └── README.md
+│   └── README.md
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
@@ -160,7 +168,6 @@ snyder/
 │   ├── .gitignore
 │   ├── package.json
 │   └── README.md
-│
 └── README.md
 ```
 
