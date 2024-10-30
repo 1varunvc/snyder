@@ -120,15 +120,33 @@ Snyder is a progressive web application (PWA) that allows users to search for an
 ## Project Structure
 
 ```
-Snyder/
+snyder/
 │
 ├── backend/
+│   ├── .env.example
+│   ├── package.json
 │   ├── server.js
+│   ├── config/
+│   │   └── config.js
 │   ├── routes/
+│   │   ├── index.js
+│   │   ├── spotifyRoutes.js
+│   │   └── authRoutes.js
 │   ├── controllers/
+│   │   ├── spotifyController.js
+│   │   └── authController.js
+│   ├── services/
+│   │   ├── spotifyService.js
+│   │   ├── spotifyClientCredentials.js
+│   │   └── authService.js
+│   ├── middleware/
+│   │   ├── rateLimiter.js
+│   │   ├── authMiddleware.js
+│   │   └── errorHandler.js
 │   ├── models/
-│   ├── .env
-│   └── .gitignore
+│   │   └── user.js (optional, for future use)
+│   └── utils/
+│       └── logger.js
 │
 ├── frontend/
 │   ├── src/

@@ -1,10 +1,10 @@
-// spotifyClientCredentials.js
-
+// services/spotifyClientCredentials.js
 const axios = require('axios');
+const config = require('../config/config');
 
-// Extract client IDs and secrets from environment variables
-const clientIds = process.env.SPOTIFY_CLIENT_IDS.split(',');
-const clientSecrets = process.env.SPOTIFY_CLIENT_SECRETS.split(',');
+// Extract client IDs and secrets from config
+const clientIds = config.spotify.clientIds;
+const clientSecrets = config.spotify.clientSecrets;
 
 // Array to hold tokens for each client
 let tokens = [];
@@ -32,23 +32,28 @@ async function getNewToken(clientId, clientSecret) {
     const expiresIn = Date.now() + response.data.expires_in * 1000;
     return { accessToken, expiresIn };
   } catch (error) {
-    console.error('Failed to get access token:', error.response ? error.response.data : error);
+    console.error(
+      'Failed to get access token:',
+      error.response ? error.response.data : error
+    );
     throw error;
   }
 }
 
 // Initialize tokens for all clients
 async function initializeTokens() {
-  tokens = await Promise.all(clientIds.map(async (clientId, index) => {
-    const clientSecret = clientSecrets[index];
-    const tokenData = await getNewToken(clientId, clientSecret);
-    return {
-      clientId,
-      clientSecret,
-      accessToken: tokenData.accessToken,
-      expiresIn: tokenData.expiresIn,
-    };
-  }));
+  tokens = await Promise.all(
+    clientIds.map(async (clientId, index) => {
+      const clientSecret = clientSecrets[index];
+      const tokenData = await getNewToken(clientId, clientSecret);
+      return {
+        clientId,
+        clientSecret,
+        accessToken: tokenData.accessToken,
+        expiresIn: tokenData.expiresIn,
+      };
+    })
+  );
 }
 
 // Function to get the next available access token
@@ -59,7 +64,10 @@ async function getAccessToken() {
   if (Date.now() >= tokenData.expiresIn - 1000) {
     // Token expired, get a new one
     try {
-      const newTokenData = await getNewToken(tokenData.clientId, tokenData.clientSecret);
+      const newTokenData = await getNewToken(
+        tokenData.clientId,
+        tokenData.clientSecret
+      );
       tokenData.accessToken = newTokenData.accessToken;
       tokenData.expiresIn = newTokenData.expiresIn;
     } catch (error) {
@@ -79,7 +87,7 @@ function handleRateLimit() {
 }
 
 // Initialize tokens at startup
-initializeTokens().catch(error => {
+initializeTokens().catch((error) => {
   console.error('Failed to initialize tokens:', error);
 });
 
