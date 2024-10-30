@@ -1,5 +1,5 @@
-// controllers/spotifyController.js
-const spotifyService = require('../services/spotifyService');
+// spotify/spotifyController.js
+const spotifyService = require('./spotifyService');
 
 exports.search = async (req, res) => {
   const query = req.query.q;

@@ -1,4 +1,4 @@
-// middleware/authMiddleware.js
+// auth/authMiddleware.js
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();

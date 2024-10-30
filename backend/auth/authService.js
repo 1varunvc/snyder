@@ -1,4 +1,4 @@
-// services/authService.js
+// auth/authService.js
 const passport = require('passport');
 const SpotifyStrategy = require('passport-spotify').Strategy;
 const config = require('../config/config');

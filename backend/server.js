@@ -2,13 +2,21 @@
 const express = require('express');
 const session = require('express-session');
 const config = require('./config/config');
-const routes = require('./routes');
+const { authRoutes } = require('./auth');
+const { spotifyRoutes } = require('./spotify');
+const { testRoutes } = require('./test');
 const passport = require('passport');
-const { globalLimiter } = require('./middleware/rateLimiter');
-const errorHandler = require('./middleware/errorHandler');
-require('./services/authService'); // Initialize passport strategies
+const { globalLimiter, errorHandler } = require('./utils');
+require('./auth/authService'); // Initialize passport strategies
 
 const app = express();
+
+// Log imported modules for debugging
+console.log('authRoutes:', authRoutes);
+console.log('spotifyRoutes:', spotifyRoutes);
+console.log('testRoutes:', testRoutes);
+console.log('globalLimiter:', globalLimiter);
+console.log('errorHandler:', errorHandler);
 
 // Apply global rate limiter
 app.use(globalLimiter);
@@ -32,10 +40,23 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Use routes
-app.use('/', routes);
+if (config.spotify.enableAuthRoutes) {
+  app.use('/auth', authRoutes);
+}
+app.use('/api/spotify', spotifyRoutes);
+
+// Mount testRoutes only in development
+if (config.nodeEnv === 'development') {
+  app.use('/', testRoutes);
+}
+
+// Default route
+app.get('/', (req, res) => {
+  res.send('Welcome to the Snyder App Backend');
+});
 
 // Error handling middleware
-app.use(errorHandler);
+app.use(errorHandler.globalLimiter); // Use the specific middleware function
 
 // Start the server
 app.listen(config.port, () => {

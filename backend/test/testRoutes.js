@@ -1,7 +1,7 @@
-// routes/testRoutes.js
+// test/testRoutes.js
 const express = require('express');
-const testController = require('../controllers/testController');
-const { ensureAuthenticated } = require('../middleware/authMiddleware');
+const testController = require('./testController');
+const { ensureAuthenticated } = require('../auth/authMiddleware');
 const config = require('../config/config');
 
 const router = express.Router();

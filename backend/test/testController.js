@@ -1,11 +1,11 @@
-// controllers/testController.js
+// test/testController.js
 const config = require('../config/config');
 
 exports.getConfig = (req, res) => {
   res.json({
     port: config.port,
     spotifyClientIds: config.spotify.clientIds,
-    youtubeApiKeys: config.youtubeApiKeys
+    youtubeApiKeys: config.youtubeApiKeys,
     // Do NOT include sensitive variables like SPOTIFY_CLIENT_SECRETS or SESSION_SECRET
   });
 };

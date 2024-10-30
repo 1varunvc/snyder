@@ -1,4 +1,4 @@
-// controllers/authController.js
+// auth/authController.js
 exports.spotifyCallback = (req, res) => {
   // Successful authentication
   res.redirect('/dashboard');
