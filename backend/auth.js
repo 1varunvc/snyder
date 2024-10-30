@@ -2,7 +2,7 @@
 const express = require('express');
 const passport = require('passport');
 const SpotifyStrategy = require('passport-spotify').Strategy;
-const axios = require('axios'); // Use axios for HTTP requests
+const axios = require('axios');
 
 const router = express.Router();
 
@@ -15,12 +15,12 @@ passport.deserializeUser((obj, done) => {
   done(null, obj);
 });
 
-// Configure the Spotify strategy for use by Passport
+// Configure the Spotify strategy for use by Passport (OAuth)
 passport.use(
   new SpotifyStrategy(
     {
-      clientID: process.env.SPOTIFY_CLIENT_ID,
-      clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+      clientID: process.env.SPOTIFY_OAUTH_CLIENT_ID,
+      clientSecret: process.env.SPOTIFY_OAUTH_CLIENT_SECRET,
       callbackURL: process.env.SPOTIFY_REDIRECT_URI,
     },
     (accessToken, refreshToken, expires_in, profile, done) => {
@@ -41,7 +41,7 @@ passport.use(
 router.get(
   '/auth/spotify',
   passport.authenticate('spotify', {
-    scope: ['user-read-email', 'user-read-private'],
+    scope: ['user-read-email'],
     showDialog: true,
   })
 );
@@ -68,10 +68,10 @@ function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/login'); // Redirect unauthenticated users to login
+  res.redirect('/auth/spotify'); // Redirect unauthenticated users to login
 }
 
-// Function to refresh the Spotify access token
+// Function to refresh the Spotify access token (OAuth)
 async function refreshSpotifyToken(refreshToken) {
   const authOptions = {
     method: 'post',
@@ -84,7 +84,7 @@ async function refreshSpotifyToken(refreshToken) {
       Authorization:
         'Basic ' +
         Buffer.from(
-          process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET
+          process.env.SPOTIFY_OAUTH_CLIENT_ID + ':' + process.env.SPOTIFY_OAUTH_CLIENT_SECRET
         ).toString('base64'),
       'Content-Type': 'application/x-www-form-urlencoded',
     },
