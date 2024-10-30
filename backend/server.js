@@ -11,13 +11,6 @@ require('./auth/authService'); // Initialize passport strategies
 
 const app = express();
 
-// Log imported modules for debugging
-console.log('authRoutes:', authRoutes);
-console.log('spotifyRoutes:', spotifyRoutes);
-console.log('testRoutes:', testRoutes);
-console.log('globalLimiter:', globalLimiter);
-console.log('errorHandler:', errorHandler);
-
 // Apply global rate limiter
 app.use(globalLimiter);
 
