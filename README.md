@@ -120,16 +120,44 @@ Snyder is a progressive web application (PWA) that allows users to search for an
 ## Project Structure
 
 ```
-Snyder/
-│
+snyder/
 ├── backend/
-│   ├── server.js
-│   ├── routes/
-│   ├── controllers/
-│   ├── models/
 │   ├── .env
-│   └── .gitignore
-│
+│   ├── .env.development
+│   ├── .env.production
+│   ├── package.json
+│   ├── server.js
+│   ├── config/
+│   │   └── config.js
+│   ├── auth/
+│   │   ├── index.js
+│   │   ├── authRoutes.js
+│   │   ├── authController.js
+│   │   ├── authService.js
+│   │   ├── authMiddleware.js
+│   │   └── README.md
+│   ├── spotify/
+│   │   ├── index.js
+│   │   ├── spotifyRoutes.js
+│   │   ├── spotifyController.js
+│   │   ├── spotifyService.js
+│   │   ├── spotifyClientCredentials.js
+│   │   └── README.md
+│   ├── test/
+│   │   ├── index.js
+│   │   ├── testRoutes.js
+│   │   ├── testController.js
+│   │   └── README.md
+│   ├── models/
+│   │   ├── user.js
+│   │   └── README.md
+│   ├── utils/
+│   │   ├── index.js
+│   │   ├── rateLimiter.js
+│   │   ├── errorHandler.js
+│   │   ├── logger.js
+│   │   └── README.md
+│   └── README.md
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
@@ -140,7 +168,6 @@ Snyder/
 │   ├── .gitignore
 │   ├── package.json
 │   └── README.md
-│
 └── README.md
 ```
 

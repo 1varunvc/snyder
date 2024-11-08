@@ -1,10 +1,8 @@
-// auth.js
-const express = require('express');
+// auth/authService.js
 const passport = require('passport');
 const SpotifyStrategy = require('passport-spotify').Strategy;
+const config = require('../config/config');
 const axios = require('axios');
-
-const router = express.Router();
 
 // Serialize and deserialize user instances to and from the session
 passport.serializeUser((user, done) => {
@@ -19,9 +17,9 @@ passport.deserializeUser((obj, done) => {
 passport.use(
   new SpotifyStrategy(
     {
-      clientID: process.env.SPOTIFY_OAUTH_CLIENT_ID,
-      clientSecret: process.env.SPOTIFY_OAUTH_CLIENT_SECRET,
-      callbackURL: process.env.SPOTIFY_REDIRECT_URI,
+      clientID: config.spotify.oauthClientId,
+      clientSecret: config.spotify.oauthClientSecret,
+      callbackURL: config.spotify.redirectUri,
     },
     (accessToken, refreshToken, expires_in, profile, done) => {
       const user = {
@@ -37,40 +35,6 @@ passport.use(
   )
 );
 
-// Authentication route for Spotify
-router.get(
-  '/auth/spotify',
-  passport.authenticate('spotify', {
-    scope: ['user-read-email'],
-    showDialog: true,
-  })
-);
-
-// Callback route
-router.get(
-  '/auth/spotify/callback',
-  passport.authenticate('spotify', { failureRedirect: '/login' }),
-  (req, res) => {
-    // Successful authentication
-    res.redirect('/');
-  }
-);
-
-// Logout route
-router.get('/logout', (req, res) => {
-  req.logout(() => {
-    res.redirect('/');
-  });
-});
-
-// Middleware to ensure user is authenticated
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect('/auth/spotify'); // Redirect unauthenticated users to login
-}
-
 // Function to refresh the Spotify access token (OAuth)
 async function refreshSpotifyToken(refreshToken) {
   const authOptions = {
@@ -84,7 +48,7 @@ async function refreshSpotifyToken(refreshToken) {
       Authorization:
         'Basic ' +
         Buffer.from(
-          process.env.SPOTIFY_OAUTH_CLIENT_ID + ':' + process.env.SPOTIFY_OAUTH_CLIENT_SECRET
+          config.spotify.oauthClientId + ':' + config.spotify.oauthClientSecret
         ).toString('base64'),
       'Content-Type': 'application/x-www-form-urlencoded',
     },
@@ -101,5 +65,6 @@ async function refreshSpotifyToken(refreshToken) {
   }
 }
 
-// Export both the router and utility functions
-module.exports = { router, ensureAuthenticated, refreshSpotifyToken };
+module.exports = {
+  refreshSpotifyToken,
+};
