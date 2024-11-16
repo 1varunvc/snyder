@@ -7,7 +7,7 @@ const config = require('../config/config');
 const router = express.Router();
 
 // Only add authentication routes if they are enabled in the config
-if (config.spotify.enableAuthRoutes) {
+if (config.enableAuthRoutes) {
   // Authentication route for Spotify
   router.get(
     '/spotify',

@@ -7,7 +7,7 @@ const config = require('../config/config');
 const router = express.Router();
 
 // Only define routes if in development mode and auth routes are enabled
-if (config.nodeEnv === 'development' && config.spotify.enableAuthRoutes) {
+if (config.nodeEnv === 'development' && config.enableAuthRoutes) {
   // Route to display environment variables (for testing purposes)
   router.get('/config', testController.getConfig);
 

@@ -33,7 +33,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Use routes
-if (config.spotify.enableAuthRoutes) {
+if (config.enableAuthRoutes) {
   app.use('/auth', authRoutes);
 }
 app.use('/api/spotify', spotifyRoutes);
