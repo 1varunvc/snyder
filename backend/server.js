@@ -32,11 +32,15 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Use routes
-if (config.spotify.enableAuthRoutes) {
+// Use authentication routes if enabled
+if (config.enableAuthRoutes) {
   app.use('/auth', authRoutes);
 }
-app.use('/api/spotify', spotifyRoutes);
+
+// Use Spotify routes if Spotify integration is enabled
+if (config.spotify.enableSpotifyIntegration) {
+  app.use('/api/spotify', spotifyRoutes);
+}
 
 // Mount testRoutes only in development
 if (config.nodeEnv === 'development') {
@@ -47,9 +51,6 @@ if (config.nodeEnv === 'development') {
 app.get('/', (req, res) => {
   res.send('Welcome to the Snyder App Backend');
 });
-
-// Error handling middleware
-app.use(errorHandler.globalLimiter); // Use the specific middleware function
 
 // Start the server
 app.listen(config.port, () => {
