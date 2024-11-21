@@ -10,6 +10,15 @@ const spotifyLimiter = rateLimit({
   },
 });
 
+// Rate limiter middleware for YouTube routes
+const youtubeLimiter = rateLimit({
+  windowMs: 30 * 1000, // 30 seconds
+  max: 100, // adjust as needed
+  message: {
+    error: 'Too many requests, please try again later.',
+  },
+});
+
 // Global rate limiter
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -21,5 +30,6 @@ const globalLimiter = rateLimit({
 
 module.exports = {
   spotifyLimiter,
+  youtubeLimiter,
   globalLimiter,
 };
