@@ -1,25 +1,26 @@
-// utils/rateLimiter.js
-const rateLimit = require('express-rate-limit');
+// utils/errorHandler.js
 
-// Rate limiter middleware for Spotify routes
-const spotifyLimiter = rateLimit({
-  windowMs: 30 * 1000, // 30 seconds
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: {
-    error: 'Too many requests, please try again later.',
-  },
-});
+/**
+ * Error handling middleware for Express applications.
+ * Logs the error stack (in development mode) and sends a response with the appropriate status code and error message.
+ *
+ * @param {Error} err - The error object caught in the application.
+ * @param {Request} req - The request object from Express.
+ * @param {Response} res - The response object from Express.
+ * @param {function} next - The next middleware function in the pipeline.
+ */
+module.exports = (err, req, res, next) => {
+  // Log the error stack only if in development mode
+  if (process.env.NODE_ENV === 'development') {
+    console.error(err.stack);
+  }
 
-// Global rate limiter
-const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // limit each IP to 1000 requests per windowMs
-  message: {
-    error: 'Too many requests, please try again later.',
-  },
-});
-
-module.exports = {
-  spotifyLimiter,
-  globalLimiter,
+  // Send appropriate response status and error message
+  const statusCode = err.status || 500;
+  res.status(statusCode).json({
+    error: {
+      message: err.message || 'Something went wrong!',
+      status: statusCode,
+    },
+  });
 };

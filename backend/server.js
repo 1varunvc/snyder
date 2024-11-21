@@ -4,6 +4,7 @@ const session = require('express-session');
 const config = require('./config/config');
 const { authRoutes } = require('./auth');
 const { spotifyRoutes } = require('./spotify');
+const { youtubeRoutes } = require('./youtube');
 const { testRoutes } = require('./test');
 const passport = require('passport');
 const { globalLimiter, errorHandler } = require('./utils');
@@ -42,6 +43,11 @@ if (config.spotify.enableSpotifyIntegration) {
   app.use('/api/spotify', spotifyRoutes);
 }
 
+// Use YouTube routes if YouTube integration is enabled
+if (config.youtube.enableYouTubeIntegration) {
+  app.use('/api/youtube', youtubeRoutes);
+}
+
 // Mount testRoutes only in development
 if (config.nodeEnv === 'development') {
   app.use('/', testRoutes);
@@ -51,6 +57,9 @@ if (config.nodeEnv === 'development') {
 app.get('/', (req, res) => {
   res.send('Welcome to the Snyder App Backend');
 });
+
+// Error handling middleware
+app.use(errorHandler);
 
 // Start the server
 app.listen(config.port, () => {
