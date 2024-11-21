@@ -1,8 +1,12 @@
 // config/config.js
 const dotenv = require('dotenv');
+const logger = require('../utils/logger');
 
 const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : process.env.NODE_ENV === 'development' ? '.env.development' : '.env';
+
 dotenv.config({ path: envFile });
+
+logger.info(`Configuration loaded from ${envFile}`);
 
 module.exports = {
   port: process.env.PORT || 3000,
@@ -15,7 +19,7 @@ module.exports = {
     redirectUri: process.env.SPOTIFY_REDIRECT_URI,
     oauthClientId: process.env.SPOTIFY_OAUTH_CLIENT_ID,
     oauthClientSecret: process.env.SPOTIFY_OAUTH_CLIENT_SECRET,
-    enableSpotifyIntegration: process.env.ENABLE_SPOTIFY_INTEGRATION === 'true'
+    enableSpotifyIntegration: process.env.ENABLE_SPOTIFY_INTEGRATION === 'true',
   },
   youtube: {
     apiKeys: process.env.YOUTUBE_API_KEYS ? process.env.YOUTUBE_API_KEYS.split(',') : [],

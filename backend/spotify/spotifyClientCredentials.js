@@ -1,6 +1,7 @@
 // spotify/spotifyClientCredentials.js
 const axios = require('axios');
 const config = require('../config/config');
+const logger = require('../utils/logger');
 
 if (config.spotify.enableSpotifyIntegration) {
   const clientIds = config.spotify.clientIds;
@@ -20,19 +21,20 @@ if (config.spotify.enableSpotifyIntegration) {
       },
       headers: {
         Authorization:
-          'Basic ' +
-          Buffer.from(clientId + ':' + clientSecret).toString('base64'),
+          'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64'),
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     };
 
     try {
+      logger.debug(`Requesting new token for client ID: ${clientId}`);
       const response = await axios(authOptions);
       const accessToken = response.data.access_token;
       const expiresIn = Date.now() + response.data.expires_in * 1000;
+      logger.info(`New token obtained for client ID: ${clientId}`);
       return { accessToken, expiresIn };
     } catch (error) {
-      console.error(
+      logger.error(
         'Failed to get access token:',
         error.response ? error.response.data : error
       );
@@ -42,6 +44,7 @@ if (config.spotify.enableSpotifyIntegration) {
 
   // Initialize tokens for all clients
   async function initializeTokens() {
+    logger.info('Initializing tokens for Spotify clients');
     tokens = await Promise.all(
       clientIds.map(async (clientId, index) => {
         const clientSecret = clientSecrets[index];
@@ -54,6 +57,7 @@ if (config.spotify.enableSpotifyIntegration) {
         };
       })
     );
+    logger.info('Tokens initialized for all Spotify clients');
   }
 
   // Function to get the next available access token
@@ -64,16 +68,23 @@ if (config.spotify.enableSpotifyIntegration) {
     if (Date.now() >= tokenData.expiresIn - 1000) {
       // Token expired, get a new one
       try {
+        logger.debug(
+          `Token expired for client ID: ${tokenData.clientId}, refreshing token`
+        );
         const newTokenData = await getNewToken(
           tokenData.clientId,
           tokenData.clientSecret
         );
         tokenData.accessToken = newTokenData.accessToken;
         tokenData.expiresIn = newTokenData.expiresIn;
+        logger.info(`Token refreshed for client ID: ${tokenData.clientId}`);
       } catch (error) {
-        console.error('Failed to refresh token:', error);
+        logger.error('Failed to refresh token:', error);
         // Move to next client
         currentClientIndex = (currentClientIndex + 1) % tokens.length;
+        logger.warn(
+          `Switching to next client. New client index: ${currentClientIndex}`
+        );
         return getAccessToken();
       }
     }
@@ -84,11 +95,12 @@ if (config.spotify.enableSpotifyIntegration) {
   // Handle rate limit by switching to next client
   function handleRateLimit() {
     currentClientIndex = (currentClientIndex + 1) % tokens.length;
+    logger.warn(`Rate limit hit. Switched to client index: ${currentClientIndex}`);
   }
 
   // Initialize tokens at startup
   initializeTokens().catch((error) => {
-    console.error('Failed to initialize tokens:', error);
+    logger.error('Failed to initialize tokens:', error);
   });
 
   module.exports = {

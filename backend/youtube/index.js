@@ -1,6 +1,8 @@
 // backend/youtube/index.js
-const express = require('express');
 const youtubeRoutes = require('./youtubeRoutes');
+const logger = require('../utils/logger');
+
+logger.debug('Initializing YouTube module');
 
 module.exports = {
   youtubeRoutes,

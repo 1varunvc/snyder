@@ -7,13 +7,18 @@ const { spotifyRoutes } = require('./spotify');
 const { youtubeRoutes } = require('./youtube');
 const { testRoutes } = require('./test');
 const passport = require('passport');
-const { globalLimiter, errorHandler } = require('./utils');
+const { globalLimiter, errorHandler, logger } = require('./utils');
 require('./auth/authService'); // Initialize passport strategies
 
 const app = express();
 
+logger.info('Starting the Express server');
+
 // Apply global rate limiter
-app.use(globalLimiter);
+app.use((req, res, next) => {
+  logger.debug('Applying global rate limiter');
+  globalLimiter(req, res, next);
+});
 
 // Configure Express session
 app.use(
@@ -29,32 +34,41 @@ app.use(
   })
 );
 
+logger.debug('Express session configured');
+
 // Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
+logger.debug('Passport initialized');
+
 // Use authentication routes if enabled
 if (config.enableAuthRoutes) {
+  logger.info('Authentication routes are enabled');
   app.use('/auth', authRoutes);
 }
 
 // Use Spotify routes if Spotify integration is enabled
 if (config.spotify.enableSpotifyIntegration) {
+  logger.info('Spotify integration is enabled');
   app.use('/api/spotify', spotifyRoutes);
 }
 
 // Use YouTube routes if YouTube integration is enabled
 if (config.youtube.enableYouTubeIntegration) {
+  logger.info('YouTube integration is enabled');
   app.use('/api/youtube', youtubeRoutes);
 }
 
 // Mount testRoutes only in development
 if (config.nodeEnv === 'development') {
+  logger.info('Node environment is development, mounting test routes');
   app.use('/', testRoutes);
 }
 
 // Default route
 app.get('/', (req, res) => {
+  logger.debug('Received request on default route');
   res.send('Welcome to the Snyder App Backend');
 });
 
@@ -63,5 +77,5 @@ app.use(errorHandler);
 
 // Start the server
 app.listen(config.port, () => {
-  console.log(`Server is running on http://localhost:${config.port}`);
+  logger.info(`Server is running on http://localhost:${config.port}`);
 });

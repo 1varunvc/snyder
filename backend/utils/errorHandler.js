@@ -1,4 +1,5 @@
 // utils/errorHandler.js
+const logger = require('./logger');
 
 /**
  * Error handling middleware for Express applications.
@@ -12,7 +13,9 @@
 module.exports = (err, req, res, next) => {
   // Log the error stack only if in development mode
   if (process.env.NODE_ENV === 'development') {
-    console.error(err.stack);
+    logger.error(err.stack);
+  } else {
+    logger.error(err.message);
   }
 
   // Send appropriate response status and error message

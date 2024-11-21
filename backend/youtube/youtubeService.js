@@ -26,12 +26,12 @@ exports.searchVideos = async (query) => {
 
     const params = {
       key: apiKey,
-      q: query + " Official Audio",
+      q: query + ' Official Audio',
       part: 'snippet',
       type: 'video',
       videoCategoryId: '10', // Music category
       videoEmbeddable: true,
-      maxResults
+      maxResults,
     };
 
     try {
@@ -41,16 +41,22 @@ exports.searchVideos = async (query) => {
       );
       results = response.data;
       success = true; // If the request is successful, exit the loop
+      logger.info('YouTube API request successful');
     } catch (error) {
       if (error.response && error.response.status === 403) {
         // Log the key that failed and continue to the next key
-        logger.warn(`API key ${apiKey} has reached its limit. Attempt ${attempt + 1}. Rotating key...`);
+        logger.warn(
+          `YouTube API key ${apiKey} has reached its limit. Attempt ${
+            attempt + 1
+          }. Rotating key...`
+        );
 
         // Add a delay before retrying to avoid exhausting all keys too quickly
         await delay(1000);
         attempt++;
       } else {
         // If it's not a rate-limit error, throw the error
+        logger.error('Error fetching data from YouTube:', error);
         error.apiKey = apiKey; // Attach the API key to the error for debugging
         throw error;
       }
@@ -58,6 +64,7 @@ exports.searchVideos = async (query) => {
   }
 
   if (!success) {
+    logger.error('All YouTube API keys have reached their limit');
     throw new Error('All API keys have reached their limit.');
   }
 
