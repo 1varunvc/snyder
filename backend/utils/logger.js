@@ -2,7 +2,7 @@
 const winston = require('winston');
 
 const logger = winston.createLogger({
-  level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
+  level: process.env.NODE_ENV === 'development' ? 'silly' : 'info',
   levels: {
     error: 0,
     warn: 1,
