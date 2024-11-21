@@ -1,7 +1,14 @@
 // spotify/spotifyController.js
 const spotifyService = require('./spotifyService');
+const config = require('../config/config');
 
 exports.search = async (req, res) => {
+  if (!config.spotify.enableSpotifyIntegration) {
+    // This check is redundant because the route won't be defined/reached if Spotify integration is disabled.
+    // However, it is kept here for clarity.
+    return res.status(403).json({ error: 'Spotify integration is disabled.' });
+  }
+
   const query = req.query.q;
   const type = req.query.type || 'track';
 

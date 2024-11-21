@@ -32,11 +32,15 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Use routes
+// Use authentication routes if enabled
 if (config.enableAuthRoutes) {
   app.use('/auth', authRoutes);
 }
-app.use('/api/spotify', spotifyRoutes);
+
+// Use Spotify routes if Spotify integration is enabled
+if (config.spotify.enableSpotifyIntegration) {
+  app.use('/api/spotify', spotifyRoutes);
+}
 
 // Mount testRoutes only in development
 if (config.nodeEnv === 'development') {
