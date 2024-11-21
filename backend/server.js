@@ -52,9 +52,6 @@ app.get('/', (req, res) => {
   res.send('Welcome to the Snyder App Backend');
 });
 
-// Error handling middleware
-app.use(errorHandler.globalLimiter); // Use the specific middleware function
-
 // Start the server
 app.listen(config.port, () => {
   console.log(`Server is running on http://localhost:${config.port}`);
