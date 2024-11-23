@@ -1,4 +1,4 @@
-// backend/youtube/youtubeClient.js
+// youtube/youtubeClient.js
 const config = require('../config/config');
 const logger = require('../utils/logger');
 

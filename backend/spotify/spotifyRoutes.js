@@ -7,6 +7,17 @@ const logger = require('../utils/logger');
 
 const router = express.Router();
 
+// Middleware to check if in development mode
+function checkDevelopmentMode(req, res, next) {
+  if (config.nodeEnv !== 'development') {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+  next();
+}
+
+// Apply the middleware
+router.use(checkDevelopmentMode);
+
 if (config.spotify.enableSpotifyIntegration) {
   logger.info('Setting up Spotify routes');
 

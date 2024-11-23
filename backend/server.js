@@ -1,14 +1,15 @@
 // server.js
 const express = require('express');
 const session = require('express-session');
+const passport = require('passport');
 const config = require('./config/config');
 const { authRoutes } = require('./auth');
 const { spotifyRoutes } = require('./spotify');
 const { youtubeRoutes } = require('./youtube');
-const { searchRoutes } = require('./search'); // Added this line
+const { searchRoutes } = require('./search'); // Assuming you have a search module
 const { testRoutes } = require('./test');
-const passport = require('passport');
 const { globalLimiter, errorHandler, logger } = require('./utils');
+
 require('./auth/authService'); // Initialize passport strategies
 
 const app = express();
@@ -16,10 +17,7 @@ const app = express();
 logger.info('Starting the Express server');
 
 // Apply global rate limiter
-app.use((req, res, next) => {
-  logger.debug('Applying global rate limiter');
-  globalLimiter(req, res, next);
-});
+app.use(globalLimiter);
 
 // Configure Express session
 app.use(
@@ -49,21 +47,22 @@ if (config.enableAuthRoutes) {
   app.use('/auth', authRoutes);
 }
 
-// Use Spotify routes if Spotify integration is enabled
-if (config.spotify.enableSpotifyIntegration) {
-  logger.info('Spotify integration is enabled');
-  app.use('/api/spotify', spotifyRoutes);
-}
+// Conditionally mount Spotify and YouTube routes only in development
+if (config.nodeEnv === 'development') {
+  if (config.spotify.enableSpotifyIntegration) {
+    logger.info('Spotify integration is enabled in development');
+    app.use('/api/spotify', spotifyRoutes);
+  }
 
-// Use YouTube routes if YouTube integration is enabled
-if (config.youtube.enableYouTubeIntegration) {
-  logger.info('YouTube integration is enabled');
-  app.use('/api/youtube', youtubeRoutes);
+  if (config.youtube.enableYouTubeIntegration) {
+    logger.info('YouTube integration is enabled in development');
+    app.use('/api/youtube', youtubeRoutes);
+  }
 }
 
 // Use search routes
 logger.info('Setting up search routes');
-app.use('/api', searchRoutes); // Added this line
+app.use('/api', searchRoutes);
 
 // Mount testRoutes only in development
 if (config.nodeEnv === 'development') {
