@@ -5,6 +5,7 @@ const config = require('./config/config');
 const { authRoutes } = require('./auth');
 const { spotifyRoutes } = require('./spotify');
 const { youtubeRoutes } = require('./youtube');
+const { searchRoutes } = require('./search'); // Added this line
 const { testRoutes } = require('./test');
 const passport = require('passport');
 const { globalLimiter, errorHandler, logger } = require('./utils');
@@ -59,6 +60,10 @@ if (config.youtube.enableYouTubeIntegration) {
   logger.info('YouTube integration is enabled');
   app.use('/api/youtube', youtubeRoutes);
 }
+
+// Use search routes
+logger.info('Setting up search routes');
+app.use('/api', searchRoutes); // Added this line
 
 // Mount testRoutes only in development
 if (config.nodeEnv === 'development') {
