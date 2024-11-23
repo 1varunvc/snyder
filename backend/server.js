@@ -74,7 +74,7 @@ if (config.nodeEnv === 'development') {
 // Default route
 app.get('/', (req, res) => {
   logger.debug('Received request on default route');
-  res.send('Welcome to the Snyder App Backend');
+  res.send('Welcome to Snyder: An upcoming music platform.');
 });
 
 // Error handling middleware
