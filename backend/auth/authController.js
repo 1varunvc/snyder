@@ -2,9 +2,13 @@
 const logger = require('../utils/logger');
 
 exports.spotifyCallback = (req, res) => {
-  logger.info('Spotify callback successful, redirecting to /dashboard');
-  // Successful authentication
-  res.redirect('/dashboard');
+  if (req.isAuthenticated()) {
+    logger.info('Spotify callback successful, user is authenticated');
+    res.redirect('/'); // Redirect to home or any other appropriate route
+  } else {
+    logger.warn('Spotify callback failed, user is not authenticated');
+    res.redirect('/auth/spotify'); // Redirect back to login
+  }
 };
 
 exports.logout = (req, res, next) => {
