@@ -1,6 +1,4 @@
-## 📄 TESTING GUIDE
-
-# Snyder Application Testing Guide
+# Snyder - Testing Guide
 
 This guide provides a set of URLs and instructions to test the various functionalities of the **Snyder** Express.js application. Use this document to verify that all features are working as expected after any changes or updates.
 
