@@ -1,4 +1,4 @@
-// backend/youtube/index.js
+// youtube/index.js
 const youtubeRoutes = require('./youtubeRoutes');
 const logger = require('../utils/logger');
 

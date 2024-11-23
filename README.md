@@ -143,6 +143,11 @@ snyder/
 │   │   ├── spotifyService.js
 │   │   ├── spotifyClientCredentials.js
 │   │   └── README.md
+│   ├── search/
+│   │   ├── index.js
+│   │   ├── searchRoutes.js
+│   │   ├── searchController.js
+│   │   ├── searchService.js
 │   ├── test/
 │   │   ├── index.js
 │   │   ├── testRoutes.js

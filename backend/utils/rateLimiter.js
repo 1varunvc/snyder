@@ -26,6 +26,18 @@ const youtubeLimiter = rateLimit({
   },
 });
 
+// Rate limiter middleware for Search routes
+const searchLimiter = rateLimit({
+  windowMs: 30 * 1000, // 30 seconds
+  max: 50, // adjust as needed
+  handler: (req, res) => {
+    logger.warn('Search rate limit exceeded for IP:', req.ip);
+    res.status(429).json({
+      error: 'Too many requests, please try again later.',
+    });
+  },
+});
+
 // Global rate limiter
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -41,5 +53,6 @@ const globalLimiter = rateLimit({
 module.exports = {
   spotifyLimiter,
   youtubeLimiter,
+  searchLimiter,
   globalLimiter,
 };

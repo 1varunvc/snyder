@@ -33,11 +33,14 @@ if (config.spotify.enableSpotifyIntegration) {
     }
   }
 
-  exports.search = (query, type) => {
+  exports.search = (query, type = 'track') => {
     logger.debug(`Initiating Spotify search for query: ${query}`);
     return fetchSpotifyData('search', { q: query, type: type, limit: 10 });
   };
 } else {
-  // Export an empty object when Spotify integration is disabled
-  module.exports = {};
+  // Export a search function that returns a rejected Promise
+  exports.search = () => {
+    logger.warn('Spotify integration is disabled. Cannot perform search.');
+    return Promise.reject(new Error('Spotify integration is disabled.'));
+  };
 }
