@@ -6,9 +6,12 @@ exports.getConfig = (req, res) => {
   logger.debug('Fetching configuration for test');
   res.json({
     port: config.port,
-    spotifyClientIds: config.spotify.clientIds.length,
+    spotifyClientIdsCount: config.spotify.clientIds.length,
     youtubeApiKeysCount: config.youtube.apiKeys.length,
     nodeEnv: config.nodeEnv,
+    enableAuthRoutes: config.enableAuthRoutes,
+    enableSpotifyIntegration: config.spotify.enableSpotifyIntegration,
+    enableYouTubeIntegration: config.youtube.enableYouTubeIntegration,
     // Do NOT include sensitive variables like SPOTIFY_CLIENT_SECRETS or SESSION_SECRET
   });
 };

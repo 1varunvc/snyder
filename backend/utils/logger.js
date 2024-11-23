@@ -2,9 +2,6 @@
 const winston = require('winston');
 const dotenv = require('dotenv');
 
-// Load environment variables from the .env file
-dotenv.config();
-
 // Determine the logging level based on the loaded environment
 const logLevel = process.env.NODE_ENV === 'development' ? 'silly' : 'info';
 
