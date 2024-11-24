@@ -19,6 +19,18 @@ function rotateApiKey() {
   return apiKey;
 }
 
+/**
+ * Function to handle rate limiting errors by implementing exponential backoff.
+ * @param {number} attempt - The current attempt count.
+ * @returns {Promise} - A promise that resolves after a delay.
+ */
+async function handleRateLimit(attempt) {
+  const delayMs = Math.pow(2, attempt) * 1000; // Exponential backoff
+  logger.warn(`Rate limit hit. Retrying after ${delayMs / 1000} seconds...`);
+  await new Promise((resolve) => setTimeout(resolve, delayMs));
+}
+
 module.exports = {
   rotateApiKey,
+  handleRateLimit,
 };
