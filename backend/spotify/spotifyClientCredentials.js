@@ -27,13 +27,11 @@ if (config.spotify.enableSpotifyIntegration) {
     };
 
     try {
-      // logger.debug(`Requesting new token for client ID: ${clientId}`);
-      logger.debug(`Requesting new token for client ID: {clientId}`);
+      logger.debug(`Requesting new token for client ID: ${clientId}`);
       const response = await axios(authOptions);
       const accessToken = response.data.access_token;
       const expiresIn = Date.now() + response.data.expires_in * 1000;
-      // logger.info(`New token obtained for client ID: ${clientId}`);
-      logger.info(`New token obtained for client ID: {clientId}`);
+      logger.info(`New token obtained for client ID: ${clientId}`);
       return { accessToken, expiresIn };
     } catch (error) {
       logger.error(

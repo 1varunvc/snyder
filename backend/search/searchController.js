@@ -12,8 +12,7 @@ exports.search = async (req, res, next) => {
 
   try {
     logger.debug(`Performing unified search for query: ${query}`);
-    const region = req.region || 'US'; // Retrieved from region middleware
-    const results = await searchService.unifiedSearch(query, region);
+    const results = await searchService.unifiedSearch(query);
     logger.info('Unified search successful');
     res.json(results);
   } catch (error) {
