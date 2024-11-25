@@ -13,6 +13,7 @@ exports.search = async (req, res, next) => {
   try {
     logger.debug(`Performing unified search for query: ${query}`);
     const results = await searchService.unifiedSearch(query);
+    // TODO: Add a check to know if the search was successful or not.
     logger.info('Unified search completed; could be successful or unsuccessful');
     res.json(results);
   } catch (error) {
