@@ -72,7 +72,7 @@ function classifyVideo(item) {
   logger.silly("[Step 1] Description does not start with 'provided to youtube by'. Proceeding to Step 2.");
 
   // Step 2: Check if title contains specified keywords
-  const keywordsRegex = /(official audio|audio|lyric video|lyrics|lyrical)/;
+  const keywordsRegex = /(audio|lyrics|lyrical|lyric)/;
   const containsKeywords = keywordsRegex.test(title);
 
   logger.silly("[Step 2] Checking for keywords in title:");

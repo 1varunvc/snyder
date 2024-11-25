@@ -24,7 +24,7 @@ function getBackoffDelay(attempt) {
 
 if (config.youtube.enableYouTubeIntegration) {
   exports.searchVideos = async (query) => {
-    const maxResults = 50;
+    const maxResults = 30;
     let attempt = 0;
     let success = false;
     let results;
