@@ -16,7 +16,7 @@ exports.search = async (req, res, next) => {
     logger.info('Unified search successful');
     res.json(results);
   } catch (error) {
-    logger.error('Error in searchController.search:', error);
+    logger.error(`Error in searchController.search: ${error}`);
     // Handle the case where no integrations are enabled
     if (error.message === 'No integrations are enabled for search') {
       res.status(503).json({ error: 'No integrations are enabled for search' });

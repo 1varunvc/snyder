@@ -21,9 +21,9 @@ if (result.error) {
   logger.info(`Configuration loaded from ${envFile}`);
 }
 
-logger.debug('ENABLE_SPOTIFY_INTEGRATION:', process.env.ENABLE_SPOTIFY_INTEGRATION);
-logger.debug('ENABLE_YOUTUBE_INTEGRATION:', process.env.ENABLE_YOUTUBE_INTEGRATION);
-logger.debug('ENABLE_AUTH_ROUTES:', process.env.ENABLE_AUTH_ROUTES);
+logger.debug(`ENABLE_SPOTIFY_INTEGRATION: ${process.env.ENABLE_SPOTIFY_INTEGRATION}`);
+logger.debug(`ENABLE_YOUTUBE_INTEGRATION: ${process.env.ENABLE_YOUTUBE_INTEGRATION}`);
+logger.debug(`ENABLE_AUTH_ROUTES: ${process.env.ENABLE_AUTH_ROUTES}`);
 
 module.exports = {
   port: process.env.PORT || 3000,

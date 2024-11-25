@@ -26,7 +26,7 @@ exports.unifiedSearch = async (query) => {
             results.spotify = data;
           })
           .catch((error) => {
-            logger.error('Error in Spotify search:', error);
+            logger.error(`Error in Spotify search: ${error}`);
             results.spotify = { error: 'Failed to fetch Spotify data' };
           })
       );
@@ -46,7 +46,7 @@ exports.unifiedSearch = async (query) => {
             results.youtube = processedResults.youtube;
           })
           .catch((error) => {
-            logger.error('Error in YouTube search:', error);
+            logger.error(`Error in YouTube search: ${error}`);
             results.youtube = { error: 'Failed to fetch YouTube data' };
           })
       );
@@ -69,7 +69,7 @@ exports.unifiedSearch = async (query) => {
 
     return results;
   } catch (error) {
-    logger.error('Error in unifiedSearch:', error);
+    logger.error(`Error in unifiedSearch: ${error}`);
     throw error;
   }
 };

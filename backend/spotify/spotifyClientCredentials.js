@@ -34,10 +34,8 @@ if (config.spotify.enableSpotifyIntegration) {
       logger.info(`New token obtained for client ID: ${clientId}`);
       return { accessToken, expiresIn };
     } catch (error) {
-      logger.error(
-        'Failed to get access token:',
-        error.response ? error.response.data : error
-      );
+      logger.error(`Failed to get access token: ${error.response ? error.response.data : error
+      }`);
       throw error;
     }
   }
@@ -79,7 +77,7 @@ if (config.spotify.enableSpotifyIntegration) {
         tokenData.expiresIn = newTokenData.expiresIn;
         logger.info(`Token refreshed for client ID: ${tokenData.clientId}`);
       } catch (error) {
-        logger.error('Failed to refresh token:', error);
+        logger.error(`Failed to refresh token: ${error}`);
         // Move to next client
         currentClientIndex = (currentClientIndex + 1) % tokens.length;
         logger.warn(
@@ -100,7 +98,7 @@ if (config.spotify.enableSpotifyIntegration) {
 
   // Initialize tokens at startup
   initializeTokens().catch((error) => {
-    logger.error('Failed to initialize tokens:', error);
+    logger.error(`Failed to initialize tokens: ${error}`);
   });
 
   module.exports = {

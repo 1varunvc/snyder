@@ -18,7 +18,7 @@ async function createSquareThumbnail(imageBuffer) {
       .resize(200, 200) // Resize to desired dimensions
       .toBuffer();
   } catch (error) {
-    logger.error('Error processing image:', error);
+    logger.error(`Error processing image: ${error}`);
     throw error;
   }
 }

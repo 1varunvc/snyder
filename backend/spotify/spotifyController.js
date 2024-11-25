@@ -25,7 +25,7 @@ exports.search = async (req, res) => {
     logger.info('Spotify search successful');
     res.json(data);
   } catch (error) {
-    logger.error('Error in spotifyController.search:', error);
+    logger.error(`Error in spotifyController.search: ${error}`);
     res.status(500).json({ error: 'Failed to fetch Spotify data' });
   }
 };

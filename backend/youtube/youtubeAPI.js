@@ -68,7 +68,7 @@ if (config.youtube.enableYouTubeIntegration) {
           attempt++;
         } else {
           // If it's not a rate-limit error, throw the error
-          logger.error('Error fetching data from YouTube:', error);
+          logger.error(`Error fetching data from YouTube: ${error}`);
           error.apiKey = apiKey; // Attach the API key to the error for debugging
           throw error;
         }
@@ -123,7 +123,7 @@ if (config.youtube.enableYouTubeIntegration) {
           attempt++;
         } else {
           // If it's not a rate-limit error, throw the error
-          logger.error('Error fetching video details from YouTube:', error);
+          logger.error(`Error fetching video details from YouTube: ${error}`);
           error.apiKey = apiKey; // Attach the API key to the error for debugging
           throw error;
         }
@@ -148,7 +148,7 @@ if (config.youtube.enableYouTubeIntegration) {
       );
       return response.data;
     } catch (error) {
-      logger.error('Error fetching data from Return YouTube Dislike API:', error);
+      logger.error(`Error fetching data from Return YouTube Dislike API: ${error}`);
       throw error;
     }
   };

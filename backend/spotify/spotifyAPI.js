@@ -27,7 +27,7 @@ if (config.spotify.enableSpotifyIntegration) {
         // Retry the request
         return fetchSpotifyData(endpoint, params);
       } else {
-        logger.error('Error fetching data from Spotify:', error);
+        logger.error(`Error fetching data from Spotify: ${error}`);
         throw error;
       }
     }

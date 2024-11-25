@@ -28,7 +28,7 @@ exports.searchVideos = async (req, res, next) => {
     logger.info('YouTube search successful');
     res.json(processedResults);
   } catch (error) {
-    logger.error('Error in youtubeController.searchVideos:', error);
+    logger.error(`Error in youtubeController.searchVideos: ${error}`);
     next(error);
   }
 };
@@ -63,7 +63,7 @@ exports.getVideoDetails = async (req, res, next) => {
     logger.info('YouTube video details fetched successfully');
     res.json(combinedData);
   } catch (error) {
-    logger.error('Error in youtubeController.getVideoDetails:', error);
+    logger.error(`Error in youtubeController.getVideoDetails: ${error}`);
     next(error);
   }
 };
