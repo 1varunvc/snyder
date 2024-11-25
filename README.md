@@ -140,7 +140,7 @@ snyder/
 │   │   ├── index.js
 │   │   ├── spotifyRoutes.js
 │   │   ├── spotifyController.js
-│   │   ├── spotifyService.js
+│   │   ├── spotifyAPI.js
 │   │   ├── spotifyClientCredentials.js
 │   │   └── README.md
 │   ├── search/

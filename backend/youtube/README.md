@@ -4,7 +4,7 @@ This directory contains all the code related to interacting with the YouTube API
 
 - `youtubeRoutes.js`: Defines routes for YouTube API endpoints.
 - `youtubeController.js`: Handles the logic for YouTube routes, including processing search requests and returning responses.
-- `youtubeService.js`: Contains the business logic for interacting with the YouTube API, including search functionality.
+- `youtubeAPI.js`: Contains the business logic for interacting with the YouTube API, including search functionality.
 - `youtubeClient.js`: Manages YouTube API keys and ensures proper key rotation for rate-limited requests.
 - `index.js`: Exports modules for easy import elsewhere in the application.
 

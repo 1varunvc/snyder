@@ -7,12 +7,12 @@ const logger = require('../utils/logger');
 
 // Serialize and deserialize user instances to and from the session
 passport.serializeUser((user, done) => {
-  logger.debug('Serializing user:', user.spotifyId);
+  logger.debug(`Serializing user: ${user.spotifyId}`);
   done(null, user);
 });
 
 passport.deserializeUser((obj, done) => {
-  logger.debug('Deserializing user:', obj.spotifyId);
+  logger.debug(`Deserializing user: ${obj.spotifyId}`);
   done(null, obj);
 });
 
@@ -66,7 +66,7 @@ async function refreshSpotifyToken(refreshToken) {
     logger.info('Spotify access token refreshed successfully');
     return { newAccessToken, newExpiresIn };
   } catch (error) {
-    logger.error('Failed to refresh Spotify access token:', error.response.data);
+    logger.error(`Failed to refresh Spotify access token: ${error.response.data}`);
     throw error;
   }
 }

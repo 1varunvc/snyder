@@ -1,6 +1,7 @@
 // search/searchService.js
-const spotifyService = require('../spotify/spotifyService');
-const youtubeService = require('../youtube/youtubeService');
+const spotifyAPI = require('../spotify/spotifyAPI');
+const youtubeAPI = require('../youtube/youtubeAPI');
+const youtubeDataProcessor = require('../youtube/youtubeDataProcessor');
 const config = require('../config/config');
 const logger = require('../utils/logger');
 
@@ -19,13 +20,13 @@ exports.unifiedSearch = async (query) => {
     if (config.spotify.enableSpotifyIntegration) {
       logger.debug('Spotify integration is enabled, adding Spotify search');
       searchPromises.push(
-        spotifyService
+        spotifyAPI
           .search(query)
           .then((data) => {
             results.spotify = data;
           })
           .catch((error) => {
-            logger.error('Error in Spotify search:', error);
+            logger.error(`Error in Spotify search: ${error}`);
             results.spotify = { error: 'Failed to fetch Spotify data' };
           })
       );
@@ -38,13 +39,14 @@ exports.unifiedSearch = async (query) => {
     if (config.youtube.enableYouTubeIntegration) {
       logger.debug('YouTube integration is enabled, adding YouTube search');
       searchPromises.push(
-        youtubeService
+        youtubeAPI
           .searchVideos(query)
-          .then((data) => {
-            results.youtube = data;
+          .then((apiResults) => {
+            const processedResults = youtubeDataProcessor.processSearchResults(apiResults);
+            results.youtube = processedResults.youtube;
           })
           .catch((error) => {
-            logger.error('Error in YouTube search:', error);
+            logger.error(`Error in YouTube search: ${error}`);
             results.youtube = { error: 'Failed to fetch YouTube data' };
           })
       );
@@ -56,6 +58,7 @@ exports.unifiedSearch = async (query) => {
     // If no integrations are enabled, throw an error
     if (searchPromises.length === 0) {
       logger.warn('No integrations are enabled, cannot perform search');
+      // noinspection ExceptionCaughtLocallyJS
       throw new Error('No integrations are enabled for search');
     }
 
@@ -66,7 +69,7 @@ exports.unifiedSearch = async (query) => {
 
     return results;
   } catch (error) {
-    logger.error('Error in unifiedSearch:', error);
+    logger.error(`Error in unifiedSearch: ${error}`);
     throw error;
   }
 };

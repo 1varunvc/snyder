@@ -5,6 +5,7 @@ const youtubeController = require('./youtubeController');
 const { youtubeLimiter } = require('../utils');
 const config = require('../config/config');
 const logger = require('../utils/logger');
+const regionMiddleware = require('../middleware/regionMiddleware');
 
 logger.info('Setting up YouTube routes');
 
@@ -18,7 +19,9 @@ function checkDevelopmentMode(req, res, next) {
 
 // Apply the middleware
 router.use(checkDevelopmentMode);
+router.use(regionMiddleware);
 
 router.get('/search', youtubeLimiter, youtubeController.searchVideos);
+router.get('/details/:videoId', youtubeLimiter, youtubeController.getVideoDetails);
 
 module.exports = router;

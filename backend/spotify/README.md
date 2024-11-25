@@ -3,7 +3,7 @@ This directory contains all Spotify-related code, including routes, controllers,
 
 - `spotifyRoutes.js`: Defines routes for Spotify API endpoints, such as the search route.
 - `spotifyController.js`: Handles the logic for Spotify routes, including the search functionality.
-- `spotifyService.js`: Contains the business logic for interacting with the Spotify API, including handling the search queries.
+- `spotifyAPI.js`: Contains the business logic for interacting with the Spotify API, including handling the search queries.
 - `spotifyClientCredentials.js`: Manages Spotify API tokens using the Client Credentials Flow, including token retrieval and expiration handling.
 - `index.js`: Exports the Spotify-related modules for easy import elsewhere in the application.
 

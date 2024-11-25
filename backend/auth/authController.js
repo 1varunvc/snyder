@@ -26,7 +26,7 @@ exports.logout = (req, res, next) => {
 
   req.logout(function (err) {
     if (err) {
-      logger.error('Error during logout:', err);
+      logger.error(`Error during logout: ${err}`);
       return next(err);
     }
     req.session.destroy(() => {

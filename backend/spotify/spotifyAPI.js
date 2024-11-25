@@ -1,4 +1,4 @@
-// spotify/spotifyService.js
+// spotify/spotifyAPI.js
 const axios = require('axios');
 const clientCredentials = require('./spotifyClientCredentials');
 const config = require('../config/config');
@@ -27,7 +27,7 @@ if (config.spotify.enableSpotifyIntegration) {
         // Retry the request
         return fetchSpotifyData(endpoint, params);
       } else {
-        logger.error('Error fetching data from Spotify:', error);
+        logger.error(`Error fetching data from Spotify: ${error}`);
         throw error;
       }
     }

@@ -1,6 +1,6 @@
 // spotify/index.js
 const spotifyRoutes = require('./spotifyRoutes');
-const spotifyService = require('./spotifyService');
+const spotifyAPI = require('./spotifyAPI');
 const config = require('../config/config');
 const logger = require('../utils/logger');
 
@@ -8,7 +8,7 @@ if (config.spotify.enableSpotifyIntegration) {
   logger.info('Spotify integration is enabled');
   module.exports = {
     spotifyRoutes,
-    spotifyService,
+    spotifyAPI,
   };
 } else {
   logger.info('Spotify integration is disabled');
