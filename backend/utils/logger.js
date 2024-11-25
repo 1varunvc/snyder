@@ -21,7 +21,12 @@ const logLevel = process.env.NODE_ENV === 'development' ? 'debug' : 'info';
 // Custom timestamp format for Indian local time (IST)
 const localTimestamp = winston.format.printf(({ level, message }) => {
   const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', timeZoneName: 'short' });
-  return `${timestamp} [${level}] ${message}`;
+  const paddedTimestamp = timestamp.padEnd(23);
+
+  // Pad the log level for consistent indentation.
+  const paddedLevel = `[${level}]`.padEnd(18);
+
+  return `${paddedTimestamp} ${paddedLevel} ${message}`;
 });
 
 const logger = winston.createLogger({
