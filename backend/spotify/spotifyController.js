@@ -1,5 +1,5 @@
 // spotify/spotifyController.js
-const spotifyService = require('./spotifyService');
+const spotifyAPI = require('./spotifyAPI');
 const config = require('../config/config');
 const logger = require('../utils/logger');
 
@@ -21,7 +21,7 @@ exports.search = async (req, res) => {
 
   try {
     logger.debug(`Searching Spotify for query: ${query}, type: ${type}`);
-    const data = await spotifyService.search(query, type);
+    const data = await spotifyAPI.search(query, type);
     logger.info('Spotify search successful');
     res.json(data);
   } catch (error) {

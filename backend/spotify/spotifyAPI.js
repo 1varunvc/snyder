@@ -1,4 +1,4 @@
-// spotify/spotifyService.js
+// spotify/spotifyAPI.js
 const axios = require('axios');
 const clientCredentials = require('./spotifyClientCredentials');
 const config = require('../config/config');
