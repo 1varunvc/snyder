@@ -3,6 +3,25 @@ const productionHouses = require('../config/productionHouses');
 const logger = require('../utils/logger');
 const { formatCount } = require('../utils/formatter');
 
+
+// TODO: Fix these typedefs; they are not properly organised below.
+/**
+ * @typedef {Object} NativeMetadata
+ * @property {string} title
+ * @property {string} description
+ * @property {string} channelId
+ * @property {string} channelTitle
+ * @property {Object} thumbnails
+ * @property {string} [publishedAt] - ISO Date string, can be optional
+ */
+
+/**
+ * @typedef {Object} ThirdPartyMetadata
+ * @property {string} id
+ * @property {NativeMetadata} snippet
+ * @property {Object} contentDetails
+ */
+
 /**
  * Normalize text by converting to lowercase and removing special characters.
  * @param {string} text - The text to normalize.
