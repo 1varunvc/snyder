@@ -12,19 +12,7 @@ function normalizeText(text) {
   return text.toLowerCase().replace(/[^\w\s]/gi, '');
 }
 
-/**
- * Extract artist name from the video title.
- * This is a placeholder function and may require more sophisticated parsing.
- * @param {string} title - The video title.
- * @returns {string} The extracted artist name.
- */
-function extractArtistName(title) {
-  // Implement logic to extract artist name from title
-  // For simplicity, we'll assume the artist's name is the first word before '-'
-  const parts = title.split('-');
-  return parts[0].trim();
-}
-
+// noinspection JSUnusedLocalSymbols
 /**
  * Check if the channel is an Official Artist Channel (OAC).
  * @param {string} channelId - The channel ID.
@@ -79,17 +67,17 @@ function classifyVideo(item) {
 
   logger.silly("[Step 2] Title contains relevant keywords. Proceeding to Step 2b.");
 
-  // Step 2b: Identify if the uploader is an Official Artist Channel
-  const isOfficialArtist = isOfficialArtistChannel(channelId);
-  logger.silly("[Step 2b] Checking if uploader is an Official Artist Channel:");
-  logger.silly(`Is Official Artist Channel: ${isOfficialArtist}`);
-
-  if (isOfficialArtist) {
-    logger.silly("[Step 2b] Uploader is an Official Artist Channel. Classifying as 'Audio'.");
-    return 'Audio';
-  }
-
-  logger.silly("[Step 2b] Uploader is not an Official Artist Channel. Proceeding to Step 2c.");
+  // // Step 2b: Identify if the uploader is an Official Artist Channel
+  // const isOfficialArtist = isOfficialArtistChannel(channelId);
+  // logger.silly("[Step 2b] Checking if uploader is an Official Artist Channel:");
+  // logger.silly(`Is Official Artist Channel: ${isOfficialArtist}`);
+  //
+  // if (isOfficialArtist) {
+  //   logger.silly("[Step 2b] Uploader is an Official Artist Channel. Classifying as 'Audio'.");
+  //   return 'Audio';
+  // }
+  //
+  // logger.silly("[Step 2b] Uploader is not an Official Artist Channel. Proceeding to Step 2c.");
 
   // Step 2c: Fallback strategies
   logger.silly("[Step 2c] Fallback strategy: Checking if title includes channel-specific variations.");
