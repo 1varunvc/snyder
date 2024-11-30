@@ -123,12 +123,17 @@ Snyder is a progressive web application (PWA) that allows users to search for an
 snyder/
 ├── backend/
 │   ├── .env
+│   ├── .env.example
 │   ├── .env.development
 │   ├── .env.production
+│   ├── .eslintrc.json
+│   ├── .prettierrc
 │   ├── package.json
+│   ├── package-lock.json
 │   ├── server.js
 │   ├── config/
-│   │   └── config.js
+│   │   ├── config.js
+│   │   └── productionHouses.js
 │   ├── auth/
 │   │   ├── index.js
 │   │   ├── authRoutes.js
@@ -148,21 +153,36 @@ snyder/
 │   │   ├── searchRoutes.js
 │   │   ├── searchController.js
 │   │   ├── searchService.js
+│   │   └── README.md
 │   ├── test/
 │   │   ├── index.js
 │   │   ├── testRoutes.js
 │   │   ├── testController.js
 │   │   └── README.md
 │   ├── models/
-│   │   ├── user.js
+│   │   └── user.js
+│   ├── youtube/
+│   │   ├── index.js
+│   │   ├── youtubeRoutes.js
+│   │   ├── youtubeController.js
+│   │   ├── youtubeAPI.js
+│   │   ├── youtubeClient.js
+│   │   ├── youtubeDataProcessor.js
 │   │   └── README.md
 │   ├── utils/
 │   │   ├── index.js
 │   │   ├── rateLimiter.js
 │   │   ├── errorHandler.js
 │   │   ├── logger.js
+│   │   ├── cache.js
+│   │   ├── formatter.js
+│   │   ├── imageProcessor.js
+│   │   ├── regionDetector.js
 │   │   └── README.md
-│   └── README.md
+│   ├── docs/
+│   │   └── TESTING.md
+│   ├── middleware/
+│   │   └── regionMiddleware.js
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
