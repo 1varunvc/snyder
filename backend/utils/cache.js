@@ -24,7 +24,7 @@ async function get(key) {
       return null;
     }
   } catch (err) {
-    logger.error(`Redis GET error for key ${key}:`, err);
+    logger.error(`Redis GET error for key ${key}: ${err}`);
     return null;
   }
 }
