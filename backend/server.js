@@ -84,19 +84,29 @@ app.get('/', (req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
-// Function to start the server after Redis connection
+/**
+ * Function to start the server after Redis connection (if enabled)
+ */
 const startServer = async () => {
-  try {
-    await redisClient.connect(); // Attempt to connect to Redis
-    logger.info('Redis client connected. Starting server...');
-
-    app.listen(config.port, () => {
-      logger.info(`Server is running on http://localhost:${config.port}`);
-    });
-  } catch (error) {
-    logger.error('Failed to connect to Redis. Server not started.', error);
-    process.exit(1); // Exit the application if Redis connection fails
+  if (config.enableCache) {
+    try {
+      // Ensure the Redis client is connected
+      if (!redisClient.isOpen) {
+        logger.info('Connecting to Redis...');
+        await redisClient.connect();
+      }
+      logger.info('Redis client connected. Starting server...');
+    } catch (error) {
+      logger.error('Failed to connect to Redis. Server not started.', error);
+      process.exit(1); // Exit the application if Redis connection fails
+    }
+  } else {
+    logger.info('Caching is disabled. Starting server without Redis connection...');
   }
+
+  app.listen(config.port, () => {
+    logger.info(`Server is running on http://localhost:${config.port}`);
+  });
 };
 
 // Start the server
