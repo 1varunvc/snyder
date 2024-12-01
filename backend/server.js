@@ -111,3 +111,20 @@ const startServer = async () => {
 
 // Start the server
 startServer();
+
+// Graceful shutdown handler
+process.on('SIGINT', async () => {
+  logger.info('Received SIGINT. Shutting down gracefully...');
+
+  if (config.enableCache && redisClient) {
+    try {
+      await redisClient.disconnect();
+      logger.info('Redis client disconnected');
+    } catch (error) {
+      logger.error(`Error disconnecting Redis client: ${error}`);
+    }
+  }
+
+  logger.info('Shutting down the server...');
+  process.exit();
+});
