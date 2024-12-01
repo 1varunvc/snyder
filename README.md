@@ -210,7 +210,18 @@ We welcome contributions from everyone! Here’s how you can help:
    git commit -m "Add your descriptive commit message"
    git push origin feature/your-feature-name
    ```
-4. Open a pull request.
+4. Before opening a pull request, **ensure that all logging statements include values properly by using template literals.** This is necessary due to how Winston formats log messages by default. Update logging using the regex below:
+
+   **Find:**
+   ```regex
+   (logger\.\w+)\(\s*'([^']*)'\s*,\s*([^)]*)\);
+   ```
+   **Replace:**
+   ```
+   $1(`$2: \${$3}`);
+   ```
+
+5. Open a pull request.
 
 ## Security and Authentication
 
