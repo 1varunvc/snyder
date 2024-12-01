@@ -20,7 +20,7 @@ if (config.enableCache) {
   });
 
   redisClient.on('error', (err) => {
-    logger.error('Redis error:', err);
+    logger.error(`Redis error: ${err}`);
   });
 
   // Connect to Redis
@@ -29,7 +29,7 @@ if (config.enableCache) {
       await redisClient.connect();
       logger.info('Redis client connected successfully');
     } catch (error) {
-      logger.error('Failed to connect to Redis:', error);
+      logger.error(`Failed to connect to Redis: ${error}`);
       process.exit(1); // Exit the application if Redis connection fails
     }
   })();

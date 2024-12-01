@@ -97,7 +97,7 @@ const startServer = async () => {
       }
       logger.info('Redis client connected. Starting server...');
     } catch (error) {
-      logger.error('Failed to connect to Redis. Server not started.', error);
+      logger.error(`Failed to connect to Redis. Server not started. ${error}`);
       process.exit(1); // Exit the application if Redis connection fails
     }
   } else {
