@@ -175,6 +175,7 @@ snyder/
 │   │   ├── errorHandler.js
 │   │   ├── logger.js
 │   │   ├── cache.js
+│   │   ├── redisClient.js
 │   │   ├── formatter.js
 │   │   ├── imageProcessor.js
 │   │   ├── regionDetector.js
