@@ -1,13 +1,15 @@
 // search/searchController.js
 const searchService = require('./searchService');
 const logger = require('../utils/logger');
+const AppError = require('../utils/AppError');
 
 exports.search = async (req, res, next) => {
   const query = req.query.q;
 
   if (!query) {
     logger.warn('Missing required parameter: q in search');
-    return res.status(400).json({ error: 'Missing required parameter: q' });
+    // Use AppError to pass error to error-handling middleware
+    return next(new AppError('Missing required parameter: q', 400));
   }
 
   try {
@@ -20,7 +22,7 @@ exports.search = async (req, res, next) => {
     logger.error(`Error in searchController.search: ${error}`);
     // Handle the case where no integrations are enabled
     if (error.message === 'No integrations are enabled for search') {
-      res.status(503).json({ error: 'No integrations are enabled for search' });
+      return next(new AppError(error.message, 503));
     } else {
       next(error);
     }

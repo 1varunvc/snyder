@@ -3,6 +3,7 @@ const youtubeAPI = require('./youtubeAPI');
 const youtubeDataProcessor = require('./youtubeDataProcessor');
 const config = require('../config/config');
 const logger = require('../utils/logger');
+const AppError = require('../utils/AppError');
 
 exports.searchVideos = async (req, res, next) => {
   try {
@@ -11,12 +12,12 @@ exports.searchVideos = async (req, res, next) => {
 
     if (!query) {
       logger.warn('Query parameter is missing in YouTube search');
-      return res.status(400).json({ error: 'Query parameter is required.' });
+      return next(new AppError('Query parameter is required.', 400));
     }
 
     if (!config.youtube.enableYouTubeIntegration) {
       logger.warn('YouTube integration is disabled, cannot perform search');
-      return res.status(403).json({ error: 'YouTube integration is disabled.' });
+      return next(new AppError('YouTube integration is disabled.', 403));
     }
 
     logger.debug(`Searching YouTube videos for query: ${query}`);
@@ -39,12 +40,12 @@ exports.getVideoDetails = async (req, res, next) => {
 
     if (!videoId) {
       logger.warn('videoId parameter is missing in getVideoDetails');
-      return res.status(400).json({ error: 'videoId parameter is required.' });
+      return next(new AppError('videoId parameter is required.', 400));
     }
 
     if (!config.youtube.enableYouTubeIntegration) {
       logger.warn('YouTube integration is disabled, cannot fetch video details');
-      return res.status(403).json({ error: 'YouTube integration is disabled.' });
+      return next(new AppError('YouTube integration is disabled.', 403));
     }
 
     logger.debug(`Fetching details for YouTube video ID: ${videoId}`);

@@ -104,8 +104,24 @@ const startServer = async () => {
     logger.info('Caching is disabled. Starting server without Redis connection...');
   }
 
-  app.listen(config.port, () => {
+  const server = app.listen(config.port, () => {
     logger.info(`Server is running on http://localhost:${config.port}`);
+  });
+
+  // Handle unhandled promise rejections
+  process.on('unhandledRejection', (reason, promise) => {
+    logger.error(`Unhandled Rejection at: ${promise}, reason: ${reason}`);
+    // Close server & exit process
+    server.close(() => {
+      process.exit(1);
+    });
+  });
+
+  // Handle uncaught exceptions
+  process.on('uncaughtException', (err) => {
+    logger.error(`Uncaught Exception: ${err.message}`);
+    logger.error(err.stack);
+    process.exit(1);
   });
 };
 

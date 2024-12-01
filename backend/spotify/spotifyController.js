@@ -2,13 +2,14 @@
 const spotifyAPI = require('./spotifyAPI');
 const config = require('../config/config');
 const logger = require('../utils/logger');
+const AppError = require('../utils/AppError');
 
-exports.search = async (req, res) => {
+exports.search = async (req, res, next) => {
   if (!config.spotify.enableSpotifyIntegration) {
     // This check is redundant because the route won't be defined/reached if Spotify integration is disabled.
     // However, it is kept here for clarity.
     logger.warn('Spotify integration is disabled. Cannot perform search.');
-    return res.status(403).json({ error: 'Spotify integration is disabled.' });
+    return next(new AppError('Spotify integration is disabled.', 403));
   }
 
   const query = req.query.q;
@@ -16,7 +17,7 @@ exports.search = async (req, res) => {
 
   if (!query) {
     logger.warn('Missing required parameter: q');
-    return res.status(400).json({ error: 'Missing required parameter: q' });
+    return next(new AppError('Missing required parameter: q', 400));
   }
 
   try {
@@ -26,6 +27,6 @@ exports.search = async (req, res) => {
     res.json(data);
   } catch (error) {
     logger.error(`Error in spotifyController.search: ${error}`);
-    res.status(500).json({ error: 'Failed to fetch Spotify data' });
+    next(error);
   }
 };

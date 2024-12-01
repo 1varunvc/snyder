@@ -1,10 +1,13 @@
 // search/searchService.js
+// noinspection ExceptionCaughtLocallyJS
+
 const spotifyAPI = require('../spotify/spotifyAPI');
 const youtubeAPI = require('../youtube/youtubeAPI');
 const youtubeDataProcessor = require('../youtube/youtubeDataProcessor');
 const config = require('../config/config');
 const logger = require('../utils/logger');
 const cache = require('../utils/cache');
+const AppError = require('../utils/AppError');
 
 exports.unifiedSearch = async (query) => {
   const cacheKey = `unifiedSearch:${query}`;
@@ -66,11 +69,10 @@ exports.unifiedSearch = async (query) => {
       results.youtube = { error: 'YouTube integration is disabled' };
     }
 
-    // If no integrations are enabled, throw an error
+    // If no integrations are enabled, throw an AppError
     if (searchPromises.length === 0) {
       logger.warn('No integrations are enabled, cannot perform search');
-      // noinspection ExceptionCaughtLocallyJS
-      throw new Error('No integrations are enabled for search');
+      throw new AppError('No integrations are enabled for search', 503);
     }
 
     // Wait for all enabled searches to complete
