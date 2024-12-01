@@ -9,7 +9,7 @@ exports.search = async (req, res, next) => {
   if (!query) {
     logger.warn('Missing required parameter: q in search');
     // Use AppError to pass error to error-handling middleware
-    return next(new AppError('Missing required parameter: q', 400));
+    return next(new AppError('Missing required parameter: q', 400, 'ERR-MISSING_QUERY'));
   }
 
   try {
@@ -17,12 +17,12 @@ exports.search = async (req, res, next) => {
     const results = await searchService.unifiedSearch(query);
     // TODO: Add a check to know if the search was successful or not.
     logger.info('Unified search completed; could be successful or unsuccessful');
-    res.json(results);
+    res.status(200).json(results);
   } catch (error) {
     logger.error(`Error in searchController.search: ${error}`);
     // Handle the case where no integrations are enabled
-    if (error.message === 'No integrations are enabled for search') {
-      return next(new AppError(error.message, 503));
+    if (error instanceof AppError && error.message === 'No integrations are enabled for search') {
+      return next(new AppError('No integrations are enabled for search', 503, 'ERR-NO_INTEGRATIONS'));
     } else {
       next(error);
     }

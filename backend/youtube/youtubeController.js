@@ -12,12 +12,12 @@ exports.searchVideos = async (req, res, next) => {
 
     if (!query) {
       logger.warn('Query parameter is missing in YouTube search');
-      return next(new AppError('Query parameter is required.', 400));
+      return next(new AppError('Query parameter is required.', 400, 'ERR-YOUTUBE_MISSING_QUERY'));
     }
 
     if (!config.youtube.enableYouTubeIntegration) {
       logger.warn('YouTube integration is disabled, cannot perform search');
-      return next(new AppError('YouTube integration is disabled.', 403));
+      return next(new AppError('YouTube integration is disabled.', 403, 'ERR-YOUTUBE_DISABLED'));
     }
 
     logger.debug(`Searching YouTube videos for query: ${query}`);
@@ -27,7 +27,7 @@ exports.searchVideos = async (req, res, next) => {
     const processedResults = youtubeDataProcessor.processSearchResults(apiResults);
 
     logger.info('YouTube search successful');
-    res.json(processedResults);
+    res.status(200).json(processedResults);
   } catch (error) {
     logger.error(`Error in youtubeController.searchVideos: ${error}`);
     next(error);
@@ -40,12 +40,12 @@ exports.getVideoDetails = async (req, res, next) => {
 
     if (!videoId) {
       logger.warn('videoId parameter is missing in getVideoDetails');
-      return next(new AppError('videoId parameter is required.', 400));
+      return next(new AppError('videoId parameter is required.', 400, 'ERR-YOUTUBE_MISSING_VIDEOID'));
     }
 
     if (!config.youtube.enableYouTubeIntegration) {
       logger.warn('YouTube integration is disabled, cannot fetch video details');
-      return next(new AppError('YouTube integration is disabled.', 403));
+      return next(new AppError('YouTube integration is disabled.', 403, 'ERR-YOUTUBE_DISABLED'));
     }
 
     logger.debug(`Fetching details for YouTube video ID: ${videoId}`);
@@ -62,7 +62,7 @@ exports.getVideoDetails = async (req, res, next) => {
     const combinedData = { ...videoDetails, ...videoStats };
 
     logger.info('YouTube video details fetched successfully');
-    res.json(combinedData);
+    res.status(200).json(combinedData);
   } catch (error) {
     logger.error(`Error in youtubeController.getVideoDetails: ${error}`);
     next(error);

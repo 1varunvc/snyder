@@ -41,12 +41,12 @@ exports.unifiedSearch = async (query) => {
           })
           .catch((error) => {
             logger.error(`Error in Spotify search: ${error}`);
-            results.spotify = { error: 'Failed to fetch Spotify data' };
+            results.spotify = { error: 'Failed to fetch Spotify data', errorCode: 'ERR-SPOTIFY_FETCH' };
           })
       );
     } else {
       logger.info('Spotify integration is disabled, skipping Spotify search');
-      results.spotify = { error: 'Spotify integration is disabled' };
+      results.spotify = { error: 'Spotify integration is disabled', errorCode: 'ERR-SPOTIFY_DISABLED' };
     }
 
     // Check if YouTube integration is enabled
@@ -61,18 +61,18 @@ exports.unifiedSearch = async (query) => {
           })
           .catch((error) => {
             logger.error(`Error in YouTube search: ${error}`);
-            results.youtube = { error: 'Failed to fetch YouTube data' };
+            results.youtube = { error: 'Failed to fetch YouTube data', errorCode: 'ERR-YOUTUBE_FETCH' };
           })
       );
     } else {
       logger.info('YouTube integration is disabled, skipping YouTube search');
-      results.youtube = { error: 'YouTube integration is disabled' };
+      results.youtube = { error: 'YouTube integration is disabled', errorCode: 'ERR-YOUTUBE_DISABLED' };
     }
 
     // If no integrations are enabled, throw an AppError
     if (searchPromises.length === 0) {
       logger.warn('No integrations are enabled, cannot perform search');
-      throw new AppError('No integrations are enabled for search', 503);
+      throw new AppError('No integrations are enabled for search', 503, 'ERR-NO_INTEGRATIONS');
     }
 
     // Wait for all enabled searches to complete

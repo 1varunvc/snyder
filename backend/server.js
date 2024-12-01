@@ -10,10 +10,18 @@ const { searchRoutes } = require('./search');
 const { testRoutes } = require('./test');
 const { globalLimiter, errorHandler, logger } = require('./utils');
 const redisClient = require('./utils/redisClient'); // Import the Redis client
+const AppError = require('./utils/AppError'); // Import AppError
 
 require('./auth/authService'); // Initialize passport strategies
 
 const app = express();
+
+// Handle uncaught exceptions before the server starts
+process.on('uncaughtException', (err) => {
+  logger.error(`Uncaught Exception: ${err.message}`);
+  logger.error(err.stack);
+  process.exit(1); // Exit the process immediately
+});
 
 logger.info('Starting the Express server');
 
@@ -78,7 +86,7 @@ if (config.nodeEnv === 'development') {
 // Default route
 app.get('/', (req, res) => {
   logger.debug('Received request on default route');
-  res.send('Welcome to Snyder: An upcoming music platform.');
+  res.status(200).send('Welcome to Snyder: An upcoming music platform.');
 });
 
 // Error handling middleware
@@ -115,13 +123,6 @@ const startServer = async () => {
     server.close(() => {
       process.exit(1);
     });
-  });
-
-  // Handle uncaught exceptions
-  process.on('uncaughtException', (err) => {
-    logger.error(`Uncaught Exception: ${err.message}`);
-    logger.error(err.stack);
-    process.exit(1);
   });
 };
 
