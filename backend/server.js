@@ -11,6 +11,7 @@ const { testRoutes } = require('./test');
 const { globalLimiter, errorHandler, logger } = require('./utils');
 const redisClient = require('./utils/redisClient'); // Import the Redis client
 const AppError = require('./utils/AppError'); // Import AppError
+const { ERROR_DEFINITIONS, ERROR_CODES } = require('./utils/errorDefinitions');
 
 require('./auth/authService'); // Initialize passport strategies
 
@@ -87,6 +88,12 @@ if (config.nodeEnv === 'development') {
 app.get('/', (req, res) => {
   logger.debug('Received request on default route');
   res.status(200).send('Welcome to Snyder: An upcoming music platform.');
+});
+
+// Handle undefined routes
+app.all('*', (req, res, next) => {
+  logger.warn(`Undefined route accessed: ${req.originalUrl}`);
+  next(new AppError(ERROR_CODES.ROUTE_NOT_FOUND));
 });
 
 // Error handling middleware

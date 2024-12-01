@@ -1,5 +1,6 @@
 // utils/errorHandler.js
 const logger = require('./logger');
+const AppError = require('./AppError');
 
 /**
  * Error handling middleware for Express applications.
@@ -11,23 +12,26 @@ const logger = require('./logger');
  * @param {function} next - The next middleware function in the pipeline.
  */
 module.exports = (err, req, res, next) => {
-  // If the error is not an instance of AppError, convert it
-  if (!(err instanceof require('./AppError'))) {
-    const AppError = require('./AppError');
-    err = new AppError(err.message || 'An unexpected error occurred', 500, 'ERR-INTERNAL');
+  // If the error is not an instance of AppError, convert it to AppError
+  if (!(err instanceof AppError)) {
+    logger.error(`Non-AppError encountered: ${err.message}`);
+    err = new AppError(errorDefinitions.ERR_UNKNOWN);
   }
+
+  // Destructure properties from AppError
+  const { statusCode, status, message, errorCode } = err;
 
   // Log the error stack only if in development mode
   if (process.env.NODE_ENV === 'development') {
-    logger.error(`Error Code: ${err.errorCode}\nStatus: ${err.status}\nMessage: ${err.message}\nStack: ${err.stack}`);
+    logger.error(`Error Code: ${errorCode}\nStatus: ${status}\nMessage: ${message}\nStack: ${err.stack}`);
   } else {
-    logger.error(`Error Code: ${err.errorCode}\nStatus: ${err.status}\nMessage: ${err.message}`);
+    logger.error(`Error Code: ${errorCode}\nStatus: ${status}\nMessage: ${message}`);
   }
 
   // Send appropriate response status and error message
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-    errorCode: err.errorCode,
+  res.status(statusCode).json({
+    status,
+    message,
+    errorCode,
   });
 };

@@ -1,0 +1,46 @@
+// utils/errorCodes.js
+/**
+ * Centralized Error Codes for the Application
+ * Ensures uniformity and prevents typos across the project.
+ */
+
+const ERROR_CODES = {
+  // General Errors
+  UNKNOWN: 'ERR-UNKNOWN',
+
+  // Search Module
+  NO_INTEGRATIONS: 'ERR-NO_INTEGRATIONS',
+  MISSING_QUERY: 'ERR-MISSING_QUERY',
+
+  // YouTube Module
+  YOUTUBE_DISABLED: 'ERR-YOUTUBE_DISABLED',
+  YOUTUBE_MISSING_QUERY: 'ERR-YOUTUBE_MISSING_QUERY',
+  YOUTUBE_MISSING_VIDEOID: 'ERR-YOUTUBE_MISSING_VIDEOID',
+  YOUTUBE_FETCH: 'ERR-YOUTUBE_FETCH',
+  YOUTUBE_FETCH_FAILED: 'ERR-YOUTUBE_FETCH_FAILED',
+
+  // Spotify Module
+  SPOTIFY_DISABLED: 'ERR-SPOTIFY_DISABLED',
+  SPOTIFY_MISSING_QUERY: 'ERR-SPOTIFY_MISSING_QUERY',
+  SPOTIFY_FETCH: 'ERR-SPOTIFY_FETCH',
+  SPOTIFY_FETCH_FAILED: 'ERR-SPOTIFY_FETCH_FAILED',
+
+  // Authentication Module
+  AUTHENTICATION_FAILED: 'ERR-AUTH_FAILED',
+
+  // Rate Limiting
+  RATE_LIMIT_EXCEEDED: 'ERR-RATE_LIMIT_EXCEEDED',
+
+  // Database Errors
+  DATABASE_CONNECTION_FAILED: 'ERR-DB_CONNECTION_FAILED',
+
+  // External API Errors
+  EXTERNAL_API_FAILURE: 'ERR-EXTERNAL_API_FAILURE',
+
+  // Undefined Routes
+  ROUTE_NOT_FOUND: 'ERR-ROUTE_NOT_FOUND',
+
+  // ... Add more as needed
+};
+
+module.exports = ERROR_CODES;

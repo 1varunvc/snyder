@@ -4,7 +4,11 @@ const youtubeDataProcessor = require('./youtubeDataProcessor');
 const config = require('../config/config');
 const logger = require('../utils/logger');
 const AppError = require('../utils/AppError');
+const { ERROR_CODES } = require('../utils/errorDefinitions');
 
+/**
+ * Controller to handle YouTube video searches.
+ */
 exports.searchVideos = async (req, res, next) => {
   try {
     // Accept both 'q' and 'query' as query parameters
@@ -12,12 +16,12 @@ exports.searchVideos = async (req, res, next) => {
 
     if (!query) {
       logger.warn('Query parameter is missing in YouTube search');
-      return next(new AppError('Query parameter is required.', 400, 'ERR-YOUTUBE_MISSING_QUERY'));
+      return next(new AppError(ERROR_CODES.YOUTUBE_MISSING_QUERY));
     }
 
     if (!config.youtube.enableYouTubeIntegration) {
       logger.warn('YouTube integration is disabled, cannot perform search');
-      return next(new AppError('YouTube integration is disabled.', 403, 'ERR-YOUTUBE_DISABLED'));
+      return next(new AppError(ERROR_CODES.YOUTUBE_DISABLED));
     }
 
     logger.debug(`Searching YouTube videos for query: ${query}`);
@@ -34,18 +38,21 @@ exports.searchVideos = async (req, res, next) => {
   }
 };
 
+/**
+ * Controller to fetch YouTube video details.
+ */
 exports.getVideoDetails = async (req, res, next) => {
   try {
     const videoId = req.params.videoId;
 
     if (!videoId) {
       logger.warn('videoId parameter is missing in getVideoDetails');
-      return next(new AppError('videoId parameter is required.', 400, 'ERR-YOUTUBE_MISSING_VIDEOID'));
+      return next(new AppError(ERROR_CODES.YOUTUBE_MISSING_VIDEOID));
     }
 
     if (!config.youtube.enableYouTubeIntegration) {
       logger.warn('YouTube integration is disabled, cannot fetch video details');
-      return next(new AppError('YouTube integration is disabled.', 403, 'ERR-YOUTUBE_DISABLED'));
+      return next(new AppError(ERROR_CODES.YOUTUBE_DISABLED));
     }
 
     logger.debug(`Fetching details for YouTube video ID: ${videoId}`);

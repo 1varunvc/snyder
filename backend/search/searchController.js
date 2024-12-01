@@ -2,29 +2,33 @@
 const searchService = require('./searchService');
 const logger = require('../utils/logger');
 const AppError = require('../utils/AppError');
+const { ERROR_CODES } = require('../utils/errorDefinitions');
 
+/**
+ * Controller to handle search requests.
+ */
 exports.search = async (req, res, next) => {
   const query = req.query.q;
 
   if (!query) {
     logger.warn('Missing required parameter: q in search');
-    // Use AppError to pass error to error-handling middleware
-    return next(new AppError('Missing required parameter: q', 400, 'ERR-MISSING_QUERY'));
+    // Use AppError with predefined error code
+    return next(new AppError(ERROR_CODES.MISSING_QUERY));
   }
 
   try {
     logger.debug(`Performing unified search for query: ${query}`);
     const results = await searchService.unifiedSearch(query);
-    // TODO: Add a check to know if the search was successful or not.
-    logger.info('Unified search completed; could be successful or unsuccessful');
+    // Explicitly set the status code
     res.status(200).json(results);
+    logger.info('Unified search completed; could be successful or unsuccessful');
   } catch (error) {
     logger.error(`Error in searchController.search: ${error}`);
-    // Handle the case where no integrations are enabled
-    if (error instanceof AppError && error.message === 'No integrations are enabled for search') {
-      return next(new AppError('No integrations are enabled for search', 503, 'ERR-NO_INTEGRATIONS'));
-    } else {
-      next(error);
+    // If the error is already an instance of AppError, pass it directly
+    if (error instanceof AppError) {
+      return next(error);
     }
+    // For unexpected errors, wrap them in AppError with a generic unknown error code
+    next(new AppError(ERROR_CODES.UNKNOWN));
   }
 };
