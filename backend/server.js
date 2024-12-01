@@ -6,9 +6,10 @@ const config = require('./config/config');
 const { authRoutes } = require('./auth');
 const { spotifyRoutes } = require('./spotify');
 const { youtubeRoutes } = require('./youtube');
-const { searchRoutes } = require('./search'); // Assuming you have a search module
+const { searchRoutes } = require('./search');
 const { testRoutes } = require('./test');
 const { globalLimiter, errorHandler, logger } = require('./utils');
+const redisClient = require('./utils/redisClient'); // Ensure redisClient is imported
 
 require('./auth/authService'); // Initialize passport strategies
 
@@ -79,7 +80,21 @@ app.get('/', (req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
-// Start the server
-app.listen(config.port, () => {
-  logger.info(`Server is running on http://localhost:${config.port}`);
-});
+// Start the server only after Redis is connected
+(async () => {
+  try {
+    // No need to connect here since redisClient.js already handles it
+    // Just ensure the Redis client is connected
+    if (!redisClient.isOpen) {
+      logger.warn('Redis client is not connected yet.');
+      await redisClient.connect(); // Optional: depends on your redisClient.js implementation
+    }
+    logger.info('Redis client connected. Starting server...');
+    app.listen(config.port, () => {
+      logger.info(`Server is running on http://localhost:${config.port}`);
+    });
+  } catch (error) {
+    logger.error('Failed to start server:', error);
+    process.exit(1); // Exit the application if server fails to start
+  }
+})();

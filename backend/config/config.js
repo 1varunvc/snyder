@@ -48,5 +48,8 @@ module.exports = {
       : [],
     enableYouTubeIntegration: process.env.ENABLE_YOUTUBE_INTEGRATION === 'true',
   },
+  redis: {
+    url: process.env.REDIS_URL,
+  },
   mongoUri: process.env.MONGODB_URI,
 };

@@ -6,6 +6,7 @@ const formatter = require('./formatter');
 const imageProcessor = require('./imageProcessor');
 const regionDetector = require('./regionDetector');
 const cache = require('./cache');
+const redisClient = require('./redisClient');
 
 logger.debug('Initializing utilities module');
 
@@ -17,4 +18,5 @@ module.exports = {
   imageProcessor,
   regionDetector,
   cache,
+  redisClient,
 };

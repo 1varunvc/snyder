@@ -3,21 +3,37 @@ const axios = require('axios');
 const clientCredentials = require('./spotifyClientCredentials');
 const config = require('../config/config');
 const logger = require('../utils/logger');
+const cache = require('../utils/cache');
 
 if (config.spotify.enableSpotifyIntegration) {
-  async function fetchSpotifyData(endpoint, params = {}) {
-    const accessToken = await clientCredentials.getAccessToken();
-    const options = {
-      method: 'get',
-      url: `https://api.spotify.com/v1/${endpoint}`,
-      headers: { Authorization: 'Bearer ' + accessToken },
-      params: params,
-    };
+  const CACHE_TTL = 2592000; // 30 days, in seconds
 
+  async function fetchSpotifyData(endpoint, params = {}) {
+    const cacheKey = `spotify:${endpoint}:${JSON.stringify(params)}`;
     try {
+      // Check if data is in cache
+      const cachedData = await cache.get(cacheKey);
+      if (cachedData) {
+        logger.info(`Serving Spotify data from cache for key: ${cacheKey}`);
+        return cachedData;
+      }
+
+      // Data not in cache, fetch from Spotify API
+      const accessToken = await clientCredentials.getAccessToken();
+      const options = {
+        method: 'get',
+        url: `https://api.spotify.com/v1/${endpoint}`,
+        headers: { Authorization: 'Bearer ' + accessToken },
+        params: params,
+      };
+
       logger.debug(`Fetching data from Spotify endpoint: ${endpoint}`);
       const response = await axios(options);
       logger.info(`Data fetched successfully from Spotify endpoint: ${endpoint}`);
+
+      // Cache the data
+      await cache.set(cacheKey, response.data, CACHE_TTL);
+
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 429) {
