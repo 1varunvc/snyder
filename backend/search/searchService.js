@@ -6,7 +6,7 @@ const config = require('../config/config');
 const logger = require('../utils/logger');
 const cache = require('../utils/cache');
 const AppError = require('../utils/AppError');
-const { ERROR_DEFINITIONS, ERROR_CODES } = require('../utils/errorDefinitions');
+const { ERROR_DEFINITIONS, ERRORS } = require('../utils/errors');
 
 /**
  * Service to perform unified search across Spotify and YouTube integrations.
@@ -46,16 +46,16 @@ exports.unifiedSearch = async (query) => {
           .catch((error) => {
             logger.error(`Error in Spotify search: ${error}`);
             results.spotify = {
-              error: ERROR_DEFINITIONS[ERROR_CODES.SPOTIFY_FETCH].message,
-              errorCode: ERROR_CODES.SPOTIFY_FETCH,
+              error: ERROR_DEFINITIONS[ERRORS.SPOTIFY_FETCH].message,
+              errorCode: ERRORS.SPOTIFY_FETCH,
             };
           })
       );
     } else {
       logger.info('Spotify integration is disabled, skipping Spotify search');
       results.spotify = {
-        error: ERROR_DEFINITIONS[ERROR_CODES.SPOTIFY_DISABLED].message,
-        errorCode: ERROR_CODES.SPOTIFY_DISABLED,
+        error: ERROR_DEFINITIONS[ERRORS.SPOTIFY_DISABLED].message,
+        errorCode: ERRORS.SPOTIFY_DISABLED,
       };
     }
 
@@ -72,23 +72,23 @@ exports.unifiedSearch = async (query) => {
           .catch((error) => {
             logger.error(`Error in YouTube search: ${error}`);
             results.youtube = {
-              error: ERROR_DEFINITIONS[ERROR_CODES.YOUTUBE_FETCH].message,
-              errorCode: ERROR_CODES.YOUTUBE_FETCH,
+              error: ERROR_DEFINITIONS[ERRORS.YOUTUBE_FETCH].message,
+              errorCode: ERRORS.YOUTUBE_FETCH,
             };
           })
       );
     } else {
       logger.info('YouTube integration is disabled, skipping YouTube search');
       results.youtube = {
-        error: ERROR_DEFINITIONS[ERROR_CODES.YOUTUBE_DISABLED].message,
-        errorCode: ERROR_CODES.YOUTUBE_DISABLED,
+        error: ERROR_DEFINITIONS[ERRORS.YOUTUBE_DISABLED].message,
+        errorCode: ERRORS.YOUTUBE_DISABLED,
       };
     }
 
     // If no integrations are enabled, throw an AppError
     if (!config.spotify.enableSpotifyIntegration && !config.youtube.enableYouTubeIntegration) {
       logger.warn('No integrations are enabled, cannot perform search');
-      throw new AppError(ERROR_CODES.NO_INTEGRATIONS);
+      throw new AppError(ERRORS.NO_INTEGRATIONS);
     }
 
     // Wait for all enabled searches to complete

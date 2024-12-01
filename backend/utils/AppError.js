@@ -1,5 +1,5 @@
 // utils/AppError.js
-const { ERROR_DEFINITIONS } = require('./errorDefinitions');
+const { ERROR_DEFINITIONS } = require('./errors');
 
 /**
  * Custom Error class to represent application-specific errors.

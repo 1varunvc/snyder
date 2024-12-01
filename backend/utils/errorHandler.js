@@ -1,6 +1,7 @@
 // utils/errorHandler.js
 const logger = require('./logger');
 const AppError = require('./AppError');
+const { ERRORS } = require('./errors');
 
 /**
  * Error handling middleware for Express applications.
@@ -15,7 +16,7 @@ module.exports = (err, req, res, next) => {
   // If the error is not an instance of AppError, convert it to AppError
   if (!(err instanceof AppError)) {
     logger.error(`Non-AppError encountered: ${err.message}`);
-    err = new AppError(errorDefinitions.ERR_UNKNOWN);
+    err = new AppError(ERRORS.UNKNOWN);
   }
 
   // Destructure properties from AppError

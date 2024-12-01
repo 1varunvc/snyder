@@ -1,4 +1,4 @@
-// utils/errorDefinitions.js
+// utils/errors.js
 /**
  * Centralized Error Definitions for the Application
  * Each error code is mapped to its message and associated HTTP status code.
@@ -95,7 +95,7 @@ const ERROR_DEFINITIONS = {
 };
 
 // Extract error codes as constants to prevent typos
-const ERROR_CODES = {
+const ERRORS = {
   UNKNOWN: 'ERR_UNKNOWN',
 
   // Search Module
@@ -133,4 +133,4 @@ const ERROR_CODES = {
   // ... Add more as needed
 };
 
-module.exports = { ERROR_DEFINITIONS, ERROR_CODES };
+module.exports = { ERROR_DEFINITIONS, ERRORS };

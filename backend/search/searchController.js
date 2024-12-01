@@ -2,7 +2,7 @@
 const searchService = require('./searchService');
 const logger = require('../utils/logger');
 const AppError = require('../utils/AppError');
-const { ERROR_CODES } = require('../utils/errorDefinitions');
+const { ERRORS } = require('../utils/errors');
 
 /**
  * Controller to handle search requests.
@@ -13,7 +13,7 @@ exports.search = async (req, res, next) => {
   if (!query) {
     logger.warn('Missing required parameter: q in search');
     // Use AppError with predefined error code
-    return next(new AppError(ERROR_CODES.MISSING_QUERY));
+    return next(new AppError(ERRORS.MISSING_QUERY));
   }
 
   try {
@@ -29,6 +29,6 @@ exports.search = async (req, res, next) => {
       return next(error);
     }
     // For unexpected errors, wrap them in AppError with a generic unknown error code
-    next(new AppError(ERROR_CODES.UNKNOWN));
+    next(new AppError(ERRORS.UNKNOWN));
   }
 };

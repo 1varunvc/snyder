@@ -11,7 +11,7 @@ const { testRoutes } = require('./test');
 const { globalLimiter, errorHandler, logger } = require('./utils');
 const redisClient = require('./utils/redisClient'); // Import the Redis client
 const AppError = require('./utils/AppError'); // Import AppError
-const { ERROR_DEFINITIONS, ERROR_CODES } = require('./utils/errorDefinitions');
+const { ERROR_DEFINITIONS, ERRORS } = require('./utils/errors');
 
 require('./auth/authService'); // Initialize passport strategies
 
@@ -78,7 +78,7 @@ app.use('/api', searchRoutes);
 
 // Mount testRoutes only in development
 if (config.nodeEnv === 'development') {
-  logger.info('Node environment is development, mounting test routes');
+  logger.info(`Node environment is 'development', mounting test routes.`);
   app.use('/', testRoutes);
 } else {
   logger.info('Test routes are not enabled');
@@ -93,7 +93,7 @@ app.get('/', (req, res) => {
 // Handle undefined routes
 app.all('*', (req, res, next) => {
   logger.warn(`Undefined route accessed: ${req.originalUrl}`);
-  next(new AppError(ERROR_CODES.ROUTE_NOT_FOUND));
+  next(new AppError(ERRORS.ROUTE_NOT_FOUND));
 });
 
 // Error handling middleware
