@@ -24,12 +24,14 @@ if (result.error) {
 logger.debug(`ENABLE_SPOTIFY_INTEGRATION: ${process.env.ENABLE_SPOTIFY_INTEGRATION}`);
 logger.debug(`ENABLE_YOUTUBE_INTEGRATION: ${process.env.ENABLE_YOUTUBE_INTEGRATION}`);
 logger.debug(`ENABLE_AUTH_ROUTES: ${process.env.ENABLE_AUTH_ROUTES}`);
+logger.debug(`ENABLE_CACHE: ${process.env.ENABLE_CACHE}`);
 
 module.exports = {
   port: process.env.PORT || 3000,
   nodeEnv: NODE_ENV,
   sessionSecret: process.env.SESSION_SECRET,
   enableAuthRoutes: process.env.ENABLE_AUTH_ROUTES === 'true',
+  enableCache: process.env.ENABLE_CACHE === 'true',
   spotify: {
     clientIds: process.env.SPOTIFY_CLIENT_IDS
       ? process.env.SPOTIFY_CLIENT_IDS.split(',')

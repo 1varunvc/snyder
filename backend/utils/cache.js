@@ -1,6 +1,7 @@
 // utils/cache.js
 const redisClient = require('./redisClient');
 const logger = require('./logger');
+const config = require('../config/config');
 
 /**
  * Get data from Redis cache.
@@ -8,6 +9,11 @@ const logger = require('./logger');
  * @returns {Promise<any>} - The cached data or null if not found.
  */
 async function get(key) {
+  if (!config.enableCache) {
+    logger.debug(`Caching is disabled. Skipping cache get for key: ${key}`);
+    return null;
+  }
+
   try {
     const data = await redisClient.get(key);
     if (data) {
@@ -31,6 +37,11 @@ async function get(key) {
  * @returns {Promise<void>}
  */
 async function set(key, value, ttl) {
+  if (!config.enableCache) {
+    logger.debug(`Caching is disabled. Skipping cache set for key: ${key}`);
+    return;
+  }
+
   try {
     await redisClient.setEx(key, ttl, JSON.stringify(value));
     logger.debug(`Data cached for key: ${key} with TTL: ${ttl} seconds`);
