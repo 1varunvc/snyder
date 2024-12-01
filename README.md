@@ -123,12 +123,17 @@ Snyder is a progressive web application (PWA) that allows users to search for an
 snyder/
 ├── backend/
 │   ├── .env
+│   ├── .env.example
 │   ├── .env.development
 │   ├── .env.production
+│   ├── .eslintrc.json
+│   ├── .prettierrc
 │   ├── package.json
+│   ├── package-lock.json
 │   ├── server.js
 │   ├── config/
-│   │   └── config.js
+│   │   ├── config.js
+│   │   └── productionHouses.js
 │   ├── auth/
 │   │   ├── index.js
 │   │   ├── authRoutes.js
@@ -148,21 +153,37 @@ snyder/
 │   │   ├── searchRoutes.js
 │   │   ├── searchController.js
 │   │   ├── searchService.js
+│   │   └── README.md
 │   ├── test/
 │   │   ├── index.js
 │   │   ├── testRoutes.js
 │   │   ├── testController.js
 │   │   └── README.md
 │   ├── models/
-│   │   ├── user.js
+│   │   └── user.js
+│   ├── youtube/
+│   │   ├── index.js
+│   │   ├── youtubeRoutes.js
+│   │   ├── youtubeController.js
+│   │   ├── youtubeAPI.js
+│   │   ├── youtubeClient.js
+│   │   ├── youtubeDataProcessor.js
 │   │   └── README.md
 │   ├── utils/
 │   │   ├── index.js
 │   │   ├── rateLimiter.js
 │   │   ├── errorHandler.js
 │   │   ├── logger.js
+│   │   ├── cache.js
+│   │   ├── redisClient.js
+│   │   ├── formatter.js
+│   │   ├── imageProcessor.js
+│   │   ├── regionDetector.js
 │   │   └── README.md
-│   └── README.md
+│   ├── docs/
+│   │   └── TESTING.md
+│   ├── middleware/
+│   │   └── regionMiddleware.js
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
@@ -190,7 +211,18 @@ We welcome contributions from everyone! Here’s how you can help:
    git commit -m "Add your descriptive commit message"
    git push origin feature/your-feature-name
    ```
-4. Open a pull request.
+4. Before opening a pull request, **ensure that all logging statements include values properly by using template literals.** This is necessary due to how Winston formats log messages by default. Update logging using the regex below:
+
+   **Find:**
+   ```regex
+   (logger\.\w+)\(\s*'([^']*)'\s*,\s*([^)]*)\);
+   ```
+   **Replace:**
+   ```
+   $1(`$2: \${$3}`);
+   ```
+
+5. Open a pull request.
 
 ## Security and Authentication
 

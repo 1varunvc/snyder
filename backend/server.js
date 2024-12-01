@@ -6,9 +6,10 @@ const config = require('./config/config');
 const { authRoutes } = require('./auth');
 const { spotifyRoutes } = require('./spotify');
 const { youtubeRoutes } = require('./youtube');
-const { searchRoutes } = require('./search'); // Assuming you have a search module
+const { searchRoutes } = require('./search');
 const { testRoutes } = require('./test');
 const { globalLimiter, errorHandler, logger } = require('./utils');
+const redisClient = require('./utils/redisClient'); // Import the Redis client
 
 require('./auth/authService'); // Initialize passport strategies
 
@@ -45,6 +46,8 @@ logger.debug('Passport initialized');
 if (config.enableAuthRoutes) {
   logger.info('Authentication routes are enabled');
   app.use('/auth', authRoutes);
+} else {
+  logger.info('Authentication routes are disabled');
 }
 
 // Conditionally mount Spotify and YouTube routes only in development
@@ -68,6 +71,8 @@ app.use('/api', searchRoutes);
 if (config.nodeEnv === 'development') {
   logger.info('Node environment is development, mounting test routes');
   app.use('/', testRoutes);
+} else {
+  logger.info('Test routes are not enabled');
 }
 
 // Default route
@@ -79,7 +84,47 @@ app.get('/', (req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
+/**
+ * Function to start the server after Redis connection (if enabled)
+ */
+const startServer = async () => {
+  if (config.enableCache) {
+    try {
+      // Ensure the Redis client is connected
+      if (!redisClient.isOpen) {
+        logger.info('Connecting to Redis...');
+        await redisClient.connect();
+      }
+      logger.info('Redis client connected. Starting server...');
+    } catch (error) {
+      logger.error(`Failed to connect to Redis. Server not started. ${error}`);
+      process.exit(1); // Exit the application if Redis connection fails
+    }
+  } else {
+    logger.info('Caching is disabled. Starting server without Redis connection...');
+  }
+
+  app.listen(config.port, () => {
+    logger.info(`Server is running on http://localhost:${config.port}`);
+  });
+};
+
 // Start the server
-app.listen(config.port, () => {
-  logger.info(`Server is running on http://localhost:${config.port}`);
+startServer();
+
+// Graceful shutdown handler
+process.on('SIGINT', async () => {
+  logger.info('Received SIGINT. Shutting down gracefully...');
+
+  if (config.enableCache && redisClient) {
+    try {
+      await redisClient.disconnect();
+      logger.info('Redis client disconnected');
+    } catch (error) {
+      logger.error(`Error disconnecting Redis client: ${error}`);
+    }
+  }
+
+  logger.info('Shutting down the server...');
+  process.exit();
 });

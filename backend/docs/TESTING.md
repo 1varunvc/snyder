@@ -7,7 +7,8 @@ application. Use this document to verify that all features are working as expect
 
 ### 🔗 **Testing URLs**
 
-Below are the URLs categorized based on their functionalities. Replace `your_query` with your desired search term.
+Below are the URLs categorized based on their functionalities. Replace `your_query` with your desired search term and
+`:videoId` with the actual YouTube video ID.
 Ensure your server is running and environment variables are correctly configured before testing.
 
 ---
@@ -74,14 +75,48 @@ Ensure your server is running and environment variables are correctly configured
 
 ---
 
-#### 5. **Default Route**
+#### 5. **YouTube Video Details Endpoint**
+
+> **Note:** This endpoint is available **only if** `ENABLE_YOUTUBE_INTEGRATION=true` in your environment variables.
+
+- **URL:** `http://localhost:3000/api/youtube/details/:videoId`
+- **Description:** Retrieves detailed information about a specific YouTube video using its `videoId`. The response
+  includes video metadata such as title, description, thumbnails, duration, and statistics like likes and view counts.
+  Depending on the `ENABLE_CACHE` setting, the response may be served from the cache or fetched directly from the
+  YouTube API.
+- **Example:**
+  ```
+  http://localhost:3000/api/youtube/details/dQw4w9WgXcQ
+  ```
+- **Example Response:**
+  ```json
+  {
+    "videoId": "dQw4w9WgXcQ",
+    "title": "Rick Astley - Never Gonna Give You Up (Video)",
+    "duration": "PT3M33S",
+    "thumbnails": {
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "likes": 1000000,
+    "viewCount": 1000000000,
+    "dislikes": 20000
+  }
+  ```
+
+---
+
+#### 6. **Default Route**
 
 - **URL:** `http://localhost:3000/`
 - **Description:** Displays a welcome message indicating that the backend of the Snyder app is running.
 
 ---
 
-#### 6. **Test Routes** *(Available Only in Development Mode)*
+#### 7. **Test Routes** *(Available Only in Development Mode)*
 
 ##### a. **Fetch Configuration Details**
 
@@ -105,7 +140,35 @@ Ensure your server is running and environment variables are correctly configured
 
 ---
 
-#### 7. **Error Handling**
+#### 8. **Caching Toggle**
+
+- **Environment Variable:** `ENABLE_CACHE`
+- **Description:** Controls whether caching is enabled for API responses. Set to `true` to enable caching, which will
+  store responses in Redis for faster subsequent access. Set to `false` to disable caching, ensuring all responses are
+  fetched directly from the source APIs.
+- **Impact:**
+    - **When Enabled (`ENABLE_CACHE=true`):**
+        - Responses from `/api/search`, `/api/spotify/search`, `/api/youtube/search`, and
+          `/api/youtube/details/:videoId` may be served from the cache.
+        - Reduces latency and minimizes redundant API calls.
+        - Log messages will indicate cache hits and misses.
+    - **When Disabled (`ENABLE_CACHE=false`):**
+        - All responses are fetched directly from Spotify and YouTube APIs.
+        - No cache hits or misses are recorded.
+        - Redis connection is not established, saving resources.
+- **Example:**
+    - **Enable Caching:**
+      ```env
+      ENABLE_CACHE=true
+      ```
+    - **Disable Caching:**
+      ```env
+      ENABLE_CACHE=false
+      ```
+
+---
+
+#### 9. **Error Handling**
 
 - **Scenario:** If you attempt to access the `/api/search` endpoint without any integrations enabled (
   `ENABLE_SPOTIFY_INTEGRATION=false` and `ENABLE_YOUTUBE_INTEGRATION=false`), you'll receive a `503 Service Unavailable`
@@ -122,22 +185,29 @@ Ensure your server is running and environment variables are correctly configured
 ### 🛠️ **Additional Testing Considerations**
 
 - **Environment Variables:**
-    - Ensure that your environment variables (`ENABLE_SPOTIFY_INTEGRATION` and `ENABLE_YOUTUBE_INTEGRATION`) are
-      correctly set in your `.env` files before starting the server.
+    - Ensure that all necessary environment variables (`ENABLE_CACHE`, `ENABLE_SPOTIFY_INTEGRATION`,
+      `ENABLE_YOUTUBE_INTEGRATION`, etc.) are correctly set in your `.env` file.
     - Restart the server after making changes to environment variables to apply the new configurations.
 
 - **Authentication Flow:**
     - To perform searches that require user authentication (e.g., Spotify searches), ensure that you've successfully
       authenticated via Spotify by accessing `http://localhost:3000/auth/spotify` before making search requests.
+- **Redis Connection:**
+    - When `ENABLE_CACHE=true`, ensure that your Redis service (e.g., Upstash) is running and accessible.
+    - Properly configure the `REDIS_URL` in your `.env` file with your Redis service credentials.
 
 - **Testing Tools:**
     - **Browser:** Directly access the URLs via your web browser.
-    - **API Clients:** Utilize tools like [Postman](https://www.postman.com/) or [Insomnia](https://insomnia.rest/) to
+    - **API Clients:** Utilize tools like [Postman](https://www.postman.com/) to
       craft and send HTTP requests, especially useful for testing various scenarios and headers.
 
 - **Logging:**
     - Monitor your server's console output to observe the flow of requests, successful operations, and any potential
       errors. Winston logging provides detailed insights for debugging and verification.
+
+- **Graceful Shutdown:**
+    - When terminating the server (e.g., pressing `Ctrl+C`), the application will gracefully disconnect from Redis if
+      caching is enabled, preventing potential resource leaks.
 
 ---
 
@@ -165,8 +235,8 @@ Ensure your server is running and environment variables are correctly configured
       integrations.
 
 2. **Conditional Testing:**
-    - Toggle `ENABLE_SPOTIFY_INTEGRATION` and `ENABLE_YOUTUBE_INTEGRATION` to `true` or `false` and observe how the
-      `/search` endpoint responds.
+    - Toggle `ENABLE_SPOTIFY_INTEGRATION`, `ENABLE_YOUTUBE_INTEGRATION` and `ENABLE_CACHE` to `true` or `false` and observe how the
+      `/search` and other endpoints respond.
     - Ensure that the application gracefully handles disabled integrations without crashing.
 
 3. **Error Simulation:**

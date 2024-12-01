@@ -4,9 +4,20 @@ const youtubeAPI = require('../youtube/youtubeAPI');
 const youtubeDataProcessor = require('../youtube/youtubeDataProcessor');
 const config = require('../config/config');
 const logger = require('../utils/logger');
+const cache = require('../utils/cache');
 
 exports.unifiedSearch = async (query) => {
+  const cacheKey = `unifiedSearch:${query}`;
+  const CACHE_TTL = 2592000; // 30 days, in seconds
+
   try {
+    // Check if data is in cache
+    const cachedData = await cache.get(cacheKey);
+    if (cachedData) {
+      logger.info(`Serving unified search results from cache for query: ${query}`);
+      return cachedData;
+    }
+
     logger.debug(`Starting unified search for query: ${query}`);
 
     const results = {
@@ -66,6 +77,9 @@ exports.unifiedSearch = async (query) => {
     await Promise.all(searchPromises);
 
     logger.debug('Searches completed');
+
+    // Cache the unified search results
+    await cache.set(cacheKey, results, CACHE_TTL);
 
     return results;
   } catch (error) {
