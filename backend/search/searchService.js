@@ -1,12 +1,14 @@
 // search/searchService.js
+// noinspection ExceptionCaughtLocallyJS
+
 const spotifyAPI = require('../spotify/spotifyAPI');
 const youtubeAPI = require('../youtube/youtubeAPI');
 const youtubeDataProcessor = require('../youtube/youtubeDataProcessor');
 const config = require('../config/config');
 const logger = require('../utils/logger');
 const cache = require('../utils/cache');
-const AppError = require('../utils/AppError');
-const { ERROR_DEFINITIONS, ERRORS } = require('../utils/errors');
+const AppError = require('../utils/errorHandling/AppError');
+const { ERROR_DEFINITIONS, ERRORS } = require('../utils/errorHandling/errors');
 
 /**
  * Service to perform unified search across Spotify and YouTube integrations.

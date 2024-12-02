@@ -1,8 +1,9 @@
 // utils/errorHandler.js
-const logger = require('./logger');
+const logger = require('../logger');
 const AppError = require('./AppError');
 const { ERRORS } = require('./errors');
 
+// noinspection JSUnusedLocalSymbols
 /**
  * Error handling middleware for Express applications.
  * Logs the error stack (in development mode) and sends a response with the appropriate status code, message, and error code.

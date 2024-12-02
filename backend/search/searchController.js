@@ -1,8 +1,8 @@
 // search/searchController.js
 const searchService = require('./searchService');
 const logger = require('../utils/logger');
-const AppError = require('../utils/AppError');
-const { ERRORS } = require('../utils/errors');
+const AppError = require('../utils/errorHandling/AppError');
+const { ERRORS } = require('../utils/errorHandling/errors');
 
 /**
  * Controller to handle search requests.

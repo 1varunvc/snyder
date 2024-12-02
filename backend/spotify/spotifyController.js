@@ -2,8 +2,8 @@
 const spotifyAPI = require('./spotifyAPI');
 const config = require('../config/config');
 const logger = require('../utils/logger');
-const AppError = require('../utils/AppError');
-const { ERRORS } = require('../utils/errors');
+const AppError = require('../utils/errorHandling/AppError');
+const { ERRORS } = require('../utils/errorHandling/errors');
 
 /**
  * Controller to handle Spotify searches.

@@ -10,8 +10,9 @@ const { searchRoutes } = require('./search');
 const { testRoutes } = require('./test');
 const { globalLimiter, errorHandler, logger } = require('./utils');
 const redisClient = require('./utils/redisClient'); // Import the Redis client
-const AppError = require('./utils/AppError'); // Import AppError
-const { ERROR_DEFINITIONS, ERRORS } = require('./utils/errors');
+const AppError = require('./utils/errorHandling/AppError'); // Import AppError
+// noinspection JSUnusedLocalSymbols
+const { ERROR_DEFINITIONS, ERRORS } = require('./utils/errorHandling/errors');
 
 require('./auth/authService'); // Initialize passport strategies
 

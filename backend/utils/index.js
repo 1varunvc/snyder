@@ -1,6 +1,6 @@
 // utils/index.js
 const rateLimiter = require('./rateLimiter');
-const errorHandler = require('./errorHandler');
+const errorHandler = require('./errorHandling/errorHandler');
 const logger = require('./logger');
 const formatter = require('./formatter');
 const imageProcessor = require('./imageProcessor');
